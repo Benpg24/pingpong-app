@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Table Tennis</title>
+  <title>PingPongBoys</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Table Tennis">
+  <meta name="apple-mobile-web-app-title" content="PingPongBoys">
   <meta name="theme-color" content="#07070d">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,6 +62,8 @@
     }
     .screen { flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
     .hidden { display: none !important; }
+    @keyframes screenEnter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .screen-enter { animation: screenEnter 0.22s cubic-bezier(0.25,0.46,0.45,0.94) both; }
 
     /* ══════════════════════════════════════════
        SETUP SCREEN
@@ -75,38 +77,44 @@
     .setup-hero {
       background: linear-gradient(160deg, #0d0d2a 0%, #0a0a16 100%);
       border-bottom: 1px solid var(--border);
-      padding: 20px 20px 16px;
-      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      padding: 16px 20px 14px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
       position: relative;
     }
     .setup-hero::before {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(67,97,238,0.15) 0%, transparent 70%);
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(67,97,238,0.2) 0%, transparent 70%);
       pointer-events: none;
     }
     .setup-icon { display: none; }
     .setup-title {
-      font-family: var(--bebas); font-size: 32px;
-      letter-spacing: 3px; color: var(--text);
+      font-family: var(--bebas); font-size: 38px;
+      letter-spacing: 6px; color: var(--text);
       line-height: 1;
     }
+    .setup-title span { color: var(--text); }
+    .title-wrap { display: inline-block; }
+    .setup-subtitle {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 3px; color: var(--text2); margin-top: 2px;
+    }
     .setup-session {
-      font-size: 11px; color: var(--text2); font-family: monospace;
-      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-      border-radius: 6px; padding: 4px 10px; letter-spacing: 1px; margin-top: 4px;
+      font-size: 10px; color: var(--text2); font-family: monospace;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3px 12px; letter-spacing: 1px; margin-top: 6px;
     }
     .setup-nav-row {
-      display: flex; gap: 10px; padding: 12px 16px 0;
+      display: flex; gap: 8px; padding: 14px 16px 0;
     }
     .setup-nav-btn {
-      flex: 1; padding: 11px 10px; font-size: 14px; font-weight: 700;
-      font-family: inherit; letter-spacing: 0.5px;
-      color: var(--text); background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.18); border-radius: 10px;
-      cursor: pointer; transition: background 0.15s;
+      flex: 1; padding: 12px 10px; font-size: 11px; font-weight: 800;
+      font-family: inherit; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text2); background: var(--panel2);
+      border: 1px solid var(--border); border-radius: 12px;
+      cursor: pointer; transition: all 0.15s;
     }
-    .setup-nav-btn:active { background: rgba(255,255,255,0.14); }
+    .setup-nav-btn:active { color: var(--text); background: var(--panel3); }
 
     .local-notice {
       margin: 14px 20px 0; background: rgba(255,190,11,0.07);
@@ -116,8 +124,9 @@
     .local-notice a { color: var(--amber); font-weight: 700; }
 
     .setup-body {
-      padding: 14px 16px 20px;
-      display: flex; flex-direction: column; gap: 12px;
+      padding: 10px 16px 14px;
+      display: flex; flex-direction: column; gap: 8px;
+      flex: 1; justify-content: space-evenly;
     }
 
     /* Player cards */
@@ -125,11 +134,15 @@
       display: flex; align-items: stretch;
       background: var(--panel2); border-radius: 16px;
       border: 1px solid var(--border); overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .pc-stripe { width: 4px; flex-shrink: 0; }
+    .player-card-1 { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 20px rgba(67,97,238,0.15); border-color: rgba(67,97,238,0.25); }
+    .player-card-2 { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 20px rgba(255,109,0,0.15); border-color: rgba(255,109,0,0.25); }
+    .pc-stripe { width: 5px; flex-shrink: 0; }
     .pc-stripe-1 { background: linear-gradient(to bottom, var(--p1), var(--p1b)); }
     .pc-stripe-2 { background: linear-gradient(to bottom, var(--p2), var(--p2b)); }
-    .pc-body { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+    .pc-body { flex: 1; padding: 8px 14px; display: flex; flex-direction: column; gap: 6px; }
     .pc-header { display: flex; align-items: center; justify-content: space-between; }
     .pc-label {
       font-size: 10px; font-weight: 800; text-transform: uppercase;
@@ -159,7 +172,7 @@
     }
     .serve-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .serve-btn {
-      padding: 13px 8px; border-radius: 12px;
+      padding: 9px 8px; border-radius: 12px;
       background: var(--panel2); border: 2px solid var(--border);
       cursor: pointer; font-family: inherit;
       display: flex; flex-direction: column; align-items: center; gap: 4px;
@@ -206,7 +219,7 @@
     .name-chip.active-2 { background: rgba(255,109,0,0.2);  border-color: var(--p2); color: var(--text); }
 
     .start-btn {
-      padding: 16px; border: none; border-radius: 14px;
+      padding: 12px; border: none; border-radius: 14px;
       background: linear-gradient(135deg, var(--green) 0%, #029e75 100%);
       color: white; font-family: var(--bebas); font-size: 24px;
       letter-spacing: 3px; cursor: pointer;
@@ -237,11 +250,11 @@
 
     .header-actions { display: flex; gap: 7px; }
     .hdr-btn {
-      padding: 6px 12px; background: var(--panel2); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text2); font-size: 12px;
-      font-family: inherit; cursor: pointer;
+      padding: 6px 14px; background: var(--panel2); border: 1px solid var(--border);
+      border-radius: 20px; color: var(--text2); font-size: 11px; font-weight: 800;
+      letter-spacing: 0.5px; font-family: inherit; cursor: pointer; transition: all 0.15s;
     }
-    .hdr-btn:active { color: var(--text); }
+    .hdr-btn:active { color: var(--text); border-color: rgba(255,255,255,0.3); }
 
     /* ── Score Area ── */
     .score-area {
@@ -276,6 +289,14 @@
 
     #zone-1:active { background: rgba(67,97,238,0.18); }
     #zone-2:active { background: rgba(255,109,0,0.18); }
+
+    /* Player icon below score — watermark style */
+    .zone-icon {
+      position: absolute; bottom: 5%; left: 0; right: 0;
+      display: flex; justify-content: center; align-items: center;
+      pointer-events: none;
+    }
+    .zone-icon img { height: min(160px, 38vh); width: auto; max-width: 85%; object-fit: contain; opacity: 0.5; }
 
     /* Name */
     .pname {
@@ -314,14 +335,14 @@
     /* Score */
     .pscore {
       font-family: var(--bebas);
-      font-size: min(32vw, 44vh);
+      font-size: min(22vw, 32vh);
       line-height: 1; letter-spacing: -1px;
       color: var(--text);
       text-shadow: 0 2px 40px rgba(0,0,0,0.5);
       z-index: 1;
     }
-    #zone-1 .pscore { color: var(--p1); text-shadow: 0 0 30px var(--p1-glow), 0 0 10px var(--p1-glow); }
-    #zone-2 .pscore { color: var(--p2); text-shadow: 0 0 30px var(--p2-glow), 0 0 10px var(--p2-glow); }
+    #zone-1 .pscore { color: var(--p1); text-shadow: 0 0 20px var(--p1-glow); }
+    #zone-2 .pscore { color: var(--p2); text-shadow: 0 0 20px var(--p2-glow); }
     .pscore.pop { animation: scorePop 0.3s cubic-bezier(0.36,0.07,0.19,0.97); }
     @keyframes scorePop {
       0%   { transform: scale(1); }
@@ -357,6 +378,32 @@
       animation: rippleOut 0.55s ease-out forwards;
     }
     @keyframes rippleOut { to { transform: scale(1); opacity: 0; } }
+
+    /* Inline Odds Panel */
+    .game-odds-panel {
+      padding: 8px 14px 10px;
+      background: var(--panel); border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .gop-bar-row {
+      height: 3px; background: var(--p2); border-radius: 2px;
+      overflow: hidden; margin-bottom: 8px;
+      box-shadow: 0 0 6px rgba(255,109,0,0.25);
+    }
+    .gop-bar-p1 {
+      height: 100%; background: var(--p1); border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+    .gop-cols { display: flex; align-items: center; gap: 8px; }
+    .gop-side { flex: 1; display: flex; align-items: baseline; gap: 6px; }
+    .gop-right { justify-content: flex-end; }
+    .gop-pct { font-family: var(--bebas); font-size: 30px; letter-spacing: 1px; line-height: 1; }
+    .gop-pct.p1 { color: var(--p1); text-shadow: 0 0 14px var(--p1-glow); }
+    .gop-pct.p2 { color: var(--p2); text-shadow: 0 0 14px var(--p2-glow); }
+    .gop-val { font-size: 11px; font-weight: 800; letter-spacing: 0.3px; color: var(--text2); }
+    .gop-mid { display: flex; flex-direction: column; align-items: center; gap: 2px; flex-shrink: 0; }
+    .gop-label { font-size: 7px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); }
+    .gop-h2h { font-size: 10px; font-weight: 800; color: var(--text2); letter-spacing: 0.3px; }
 
     /* Footer */
     .game-footer {
@@ -422,16 +469,18 @@
     ══════════════════════════════════════════ */
     .screen-header {
       display: flex; align-items: center; gap: 12px;
-      padding: 12px 14px; border-bottom: 1px solid var(--border);
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
       background: var(--panel); flex-shrink: 0;
     }
     .back-btn {
-      padding: 7px 13px; background: var(--panel2); border: 1px solid var(--border);
-      border-radius: 9px; color: var(--text); font-family: inherit; font-size: 13px; cursor: pointer;
+      padding: 7px 14px; background: var(--panel2); border: 1px solid var(--border);
+      border-radius: 20px; color: var(--text2); font-family: inherit; font-size: 11px;
+      font-weight: 800; letter-spacing: 0.5px; cursor: pointer; transition: all 0.15s;
     }
-    .back-btn:active { opacity: 0.7; }
+    .back-btn:active { color: var(--text); }
     .screen-title {
-      font-family: var(--bebas); font-size: 24px; letter-spacing: 2px;
+      font-family: var(--bebas); font-size: 22px; letter-spacing: 3px; flex: 1;
+      text-transform: uppercase;
     }
     .scroll-list {
       flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
@@ -458,7 +507,7 @@
     .hcard-vs { font-size: 10px; color: var(--muted); padding: 0 10px; flex-shrink: 0; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
     .hcard-scores { display: flex; align-items: center; justify-content: center; gap: 6px; }
     .hcard-score { font-family: var(--bebas); font-size: 36px; flex: 1; text-align: center; letter-spacing: 1px; }
-    .hcard-score.w { color: var(--green); }
+    .hcard-score.w { color: var(--text); }
     .hcard-score.l { color: var(--muted); }
     .hcard-sep { font-family: var(--bebas); font-size: 22px; color: var(--muted); }
     .hcard-time { font-size: 10px; color: var(--muted); text-align: center; margin-top: 8px; font-weight: 600; letter-spacing: 0.5px; }
@@ -477,7 +526,7 @@
     .srow-elo.top1 { background: linear-gradient(90deg, rgba(255,200,69,0.07) 0%, transparent 80%); }
     .srow-elo.top2 { background: linear-gradient(90deg, rgba(192,192,192,0.05) 0%, transparent 80%); }
     .srow-elo.top3 { background: linear-gradient(90deg, rgba(205,127,50,0.05) 0%, transparent 80%); }
-    .selo-rating { font-family: var(--bebas); font-size: 22px; color: var(--text); letter-spacing: 1px; text-align: center; }
+    .selo-rating { font-family: var(--bebas); font-size: 22px; color: #4cc9f0; letter-spacing: 1px; text-align: center; text-shadow: 0 0 10px rgba(76,201,240,0.35); }
     .selo-change { font-size: 12px; font-weight: 800; text-align: center; }
     .selo-change.pos { color: var(--green); }
     .selo-change.neg { color: #ef476f; }
@@ -486,6 +535,19 @@
     .selo-margin.pos { color: var(--green); }
     .selo-margin.neg { color: #ef476f; }
     .selo-margin.zero { color: var(--muted); }
+    .elo-explainer {
+      margin: 16px; padding: 14px 16px;
+      background: var(--panel2); border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .elo-explainer-title {
+      font-size: 10px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #4cc9f0; margin-bottom: 6px;
+    }
+    .elo-explainer-body {
+      font-size: 12px; color: var(--text2); line-height: 1.6;
+    }
+    .elo-explainer-body strong { color: var(--text); font-weight: 700; }
     /* Exhibition individual game cards */
     .exhi-game-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; }
     .exhi-game-tag { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--amber); margin-bottom: 6px; }
@@ -497,13 +559,13 @@
 
     .standings-header {
       display: grid;
-      grid-template-columns: 48px 1fr 38px 38px 68px;
-      padding: 10px 16px; gap: 6px;
+      grid-template-columns: 40px 1fr 42px 42px 70px;
+      padding: 12px 14px; gap: 4px;
       border-bottom: 1px solid var(--border);
       background: var(--panel2); flex-shrink: 0;
     }
     .sth {
-      font-size: 9px; font-weight: 800; text-transform: uppercase;
+      font-size: 10px; font-weight: 800; text-transform: uppercase;
       letter-spacing: 1.5px; color: var(--muted); text-align: center;
     }
     .sth.left { text-align: left; }
@@ -512,8 +574,8 @@
 
     .srow {
       display: grid;
-      grid-template-columns: 48px 1fr 38px 38px 68px;
-      padding: 14px 16px; gap: 6px;
+      grid-template-columns: 40px 1fr 42px 42px 70px;
+      padding: 14px 14px; gap: 4px;
       align-items: center;
       border-bottom: 1px solid var(--border);
       background: var(--panel);
@@ -527,23 +589,34 @@
     .srow.top3 { background: linear-gradient(90deg, rgba(205,127,50,0.05) 0%, transparent 80%); }
 
     .srank {
-      font-family: var(--bebas); font-size: 20px; text-align: center;
+      font-family: var(--bebas); font-size: 26px; text-align: center;
       color: var(--muted); letter-spacing: 1px;
     }
     .srank.gold   { color: var(--gold); text-shadow: 0 0 12px rgba(255,200,69,0.5); }
     .srank.silver { color: #c8c8d8; }
     .srank.bronze { color: #cd8050; }
 
-    .splayer { min-width: 0; }
+    .splayer { min-width: 0; display: flex; align-items: center; gap: 10px; }
+    .splayer-info { min-width: 0; flex: 1; }
     .splayer-name {
       font-size: 15px; font-weight: 800;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       color: var(--text);
     }
-    .splayer-tap { font-size: 10px; color: var(--muted); margin-top: 2px; letter-spacing: 0.3px; }
+    .splayer-tap { font-size: 10px; color: var(--muted); margin-top: 1px; letter-spacing: 0.3px; }
+    .p-avatar {
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800;
+    }
+    .p-avatar.initials {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid var(--border);
+    }
+    .p-avatar img { width: 44px; height: 44px; object-fit: contain; }
 
     .sstat {
-      font-family: var(--bebas); font-size: 22px; letter-spacing: 1px;
+      font-family: var(--bebas); font-size: 28px; letter-spacing: 1px;
       text-align: center;
     }
     .sstat.w { color: var(--green); }
@@ -551,10 +624,10 @@
 
     .spct { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
     .spct-num {
-      font-family: var(--bebas); font-size: 18px; letter-spacing: 1px; color: var(--gold);
+      font-family: var(--bebas); font-size: 24px; letter-spacing: 1px; color: var(--gold);
     }
     .spct-bar {
-      width: 100%; height: 4px; background: var(--panel3); border-radius: 2px; overflow: hidden;
+      width: 100%; height: 5px; background: var(--panel3); border-radius: 2px; overflow: hidden;
     }
     /* Leaderboard expanded H2H */
     .srow-detail {
@@ -636,11 +709,13 @@
     .odds-toggle { flex: 1; padding: 8px; background: var(--panel3); border: 1px solid var(--border); border-radius: 8px; color: var(--text2); font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.15s; }
     .odds-toggle.active { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.4); color: var(--text); }
     .odds-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .odds-card { background: var(--panel3); border-radius: 12px; padding: 12px; text-align: center; }
-    .odds-card-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 6px; }
-    .odds-card-value { font-family: var(--bebas); font-size: 32px; letter-spacing: 1px; color: var(--text); }
-    .odds-card-value.p1 { color: var(--p1); }
-    .odds-card-value.p2 { color: var(--p2); }
+    .odds-card { background: var(--panel3); border-radius: 14px; padding: 16px 12px; text-align: center; border: 1px solid var(--border); }
+    .odds-card:first-child { border-color: rgba(67,97,238,0.3); box-shadow: 0 0 16px rgba(67,97,238,0.1); }
+    .odds-card:last-child { border-color: rgba(255,109,0,0.3); box-shadow: 0 0 16px rgba(255,109,0,0.1); }
+    .odds-card-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text2); margin-bottom: 8px; }
+    .odds-card-value { font-family: var(--bebas); font-size: 48px; letter-spacing: 1px; line-height: 1; }
+    .odds-card-value.p1 { color: var(--p1); text-shadow: 0 0 20px var(--p1-glow); }
+    .odds-card-value.p2 { color: var(--p2); text-shadow: 0 0 20px var(--p2-glow); }
     .odds-h2h { background: var(--panel3); border-radius: 12px; padding: 14px 16px; }
     .odds-h2h-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 10px; }
     .odds-h2h-row { display: flex; align-items: center; gap: 10px; }
@@ -657,8 +732,8 @@
     .match-type-btn { padding: 12px 8px; border-radius: 12px; background: var(--panel3); border: 2px solid var(--border); cursor: pointer; font-family: inherit; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: all 0.2s; -webkit-user-select: none; }
     #type-comp { border-color: rgba(255,200,69,0.3); }
     #type-comp.selected { background: rgba(255,200,69,0.1); border-color: var(--gold); box-shadow: 0 0 18px rgba(255,200,69,0.25); }
-    #type-exhi { border-color: rgba(76,201,240,0.3); }
-    #type-exhi.selected { background: rgba(76,201,240,0.1); border-color: var(--serve); box-shadow: 0 0 18px rgba(76,201,240,0.25); }
+    #type-exhi { border-color: rgba(255,255,255,0.15); }
+    #type-exhi.selected { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.6); box-shadow: 0 0 18px rgba(255,255,255,0.1); }
     .mt-icon { font-size: 20px; }
     .mt-label { font-size: 13px; font-weight: 800; color: var(--text); }
     .mt-sub { font-size: 10px; color: var(--text2); }
@@ -709,6 +784,76 @@
       font-size: 15px; cursor: pointer;
     }
     .cancel-btn:active { color: var(--text); }
+
+    /* ── Odds Screen ── */
+    #odds-screen { overflow: hidden; }
+    .odds-screen-body { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+    .odds-picker-row {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 14px; padding: 12px 14px;
+    }
+    .odds-picker {
+      flex: 1; background: var(--panel2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-family: inherit;
+      font-size: 14px; font-weight: 700; padding: 10px 12px;
+      appearance: none; -webkit-appearance: none; text-align: center;
+    }
+    .odds-picker-vs {
+      font-size: 11px; font-weight: 800; color: var(--muted);
+      letter-spacing: 1px; flex-shrink: 0;
+    }
+    .odds-screen-players { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .odds-screen-cards   { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* ── Bottom Tab Bar ── */
+    #tab-bar {
+      display: flex; flex-shrink: 0;
+      background: var(--panel); border-top: 1px solid var(--border);
+      padding-bottom: env(safe-area-inset-bottom, 6px);
+    }
+    #tab-bar.hidden { display: none !important; }
+    .tab-btn {
+      flex: 1; padding: 10px 8px 10px; background: none; border: none;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      cursor: pointer; font-family: inherit; color: var(--text2);
+      transition: color 0.15s; -webkit-user-select: none;
+    }
+    .tab-btn.active { color: var(--gold); }
+    .tab-btn:active { opacity: 0.6; }
+    .tab-icon { font-size: 20px; line-height: 1; }
+    .tab-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .back-btn.hidden-tab { display: none; }
+
+    /* ── Mobile / short-screen adjustments ── */
+    @media (max-height: 650px) {
+      /* Compact game odds panel */
+      .game-odds-panel { padding: 5px 14px 6px; }
+      .gop-bar-row { margin-bottom: 5px; }
+      .gop-pct { font-size: 22px; }
+      .gop-val { font-size: 10px; }
+      /* Compact game footer */
+      .game-footer { padding: 5px 10px; }
+      .foot-btn { padding: 8px; }
+      /* Compact game header */
+      .game-header { padding: 5px 12px; }
+      /* Smaller setup hero on short screens */
+      .setup-hero { padding: 16px 20px 14px; }
+      .setup-title { font-size: 30px; }
+    }
+
+    /* Landscape: hide odds panel labels, keep just the bar + numbers */
+    @media (max-height: 450px) {
+      .gop-mid { display: none; }
+      .game-odds-panel { padding: 4px 14px 5px; }
+    }
+
+    /* Tab bar: tighter on very narrow screens */
+    @media (max-width: 360px) {
+      .tab-btn { padding: 10px 4px; }
+      .tab-label { font-size: 8px; letter-spacing: 0.5px; }
+      .tab-icon { font-size: 18px; }
+    }
   </style>
 </head>
 <body>
@@ -717,14 +862,12 @@
   <!-- ── SETUP ──────────────────────────────── -->
   <div id="setup" class="screen">
     <div class="setup-hero">
-      <div class="setup-title">🏓 Table Tennis</div>
+      <div class="title-wrap">
+        <div class="setup-title">PING PONG <span>BOYS</span></div>
+      </div>
       <div class="setup-session" id="setup-session-id"></div>
     </div>
 
-    <div class="setup-nav-row">
-      <button class="setup-nav-btn" id="setup-lb-btn">🏆 Standings</button>
-      <button class="setup-nav-btn" id="setup-history-btn">📋 History</button>
-    </div>
 
     <div class="local-notice hidden" id="local-notice">
       Local mode — <a href="#" id="how-to-sync-link">add Firebase for live sync →</a>
@@ -732,7 +875,7 @@
 
     <div class="setup-body">
 
-      <div class="player-card">
+      <div class="player-card player-card-1">
         <div class="pc-stripe pc-stripe-1"></div>
         <div class="pc-body">
           <div class="pc-header">
@@ -750,7 +893,7 @@
         </div>
       </div>
 
-      <div class="player-card">
+      <div class="player-card player-card-2">
         <div class="pc-stripe pc-stripe-2"></div>
         <div class="pc-body">
           <div class="pc-header">
@@ -815,14 +958,15 @@
       </div>
       <div class="header-actions">
         <button class="hdr-btn" id="game-back-btn">← Setup</button>
-        <button class="hdr-btn" id="odds-btn">📊</button>
-        <button class="hdr-btn" id="lb-btn">🏆</button>
-        <button class="hdr-btn" id="history-btn">History</button>
+        <button class="hdr-btn" id="odds-btn" style="display:none">Odds</button>
+        <button class="hdr-btn" id="lb-btn" style="display:none">Board</button>
+        <button class="hdr-btn" id="history-btn" style="display:none">History</button>
       </div>
     </div>
 
     <div class="score-area">
       <div class="player-zone" id="zone-1">
+        <div class="zone-icon" id="icon-1"></div>
         <div class="pname" id="game-p1-name">P1</div>
         <div class="serve-pips" id="pips-1"></div>
         <div class="pscore" id="score-1">0</div>
@@ -835,9 +979,30 @@
       </div>
 
       <div class="player-zone" id="zone-2">
+        <div class="zone-icon" id="icon-2"></div>
         <div class="pname" id="game-p2-name">P2</div>
         <div class="serve-pips" id="pips-2"></div>
         <div class="pscore" id="score-2">0</div>
+      </div>
+    </div>
+
+    <div class="game-odds-panel" id="game-odds-panel">
+      <div class="gop-bar-row">
+        <div class="gop-bar-p1" id="gop-bar-p1" style="width:50%"></div>
+      </div>
+      <div class="gop-cols">
+        <div class="gop-side">
+          <span class="gop-pct p1" id="gop-pct-1">50%</span>
+          <span class="gop-val" id="gop-val-1">2.00</span>
+        </div>
+        <div class="gop-mid">
+          <div class="gop-label">Win Odds</div>
+          <div class="gop-h2h" id="gop-h2h">H2H</div>
+        </div>
+        <div class="gop-side gop-right">
+          <span class="gop-val" id="gop-val-2">2.00</span>
+          <span class="gop-pct p2" id="gop-pct-2">50%</span>
+        </div>
       </div>
     </div>
 
@@ -867,7 +1032,7 @@
   <div id="leaderboard" class="screen hidden">
     <div class="screen-header">
       <button class="back-btn" id="lb-back-btn">← Back</button>
-      <div class="screen-title">🏆 Standings</div>
+      <div class="screen-title">Standings</div>
     </div>
     <div class="lb-view-toggle">
       <button class="lb-view-btn active" id="lb-wl-btn">W/L Record</button>
@@ -881,6 +1046,10 @@
       <div class="sth">WIN%</div>
     </div>
     <div class="lb-scroll" id="lb-list"></div>
+    <div class="elo-explainer hidden" id="elo-explainer-panel">
+      <div class="elo-explainer-title">How ELO works</div>
+      <div class="elo-explainer-body">Used in chess and other sports to measure player ability. Everyone starts at <strong>1000</strong>. Beating a higher-rated player earns you more points, while losing to a lower-rated player costs you more. Winning by a bigger margin (e.g. 11-1 vs 11-9) also earns extra points. The <strong>+/-</strong> column shows how your rating changed in your last game.</div>
+    </div>
   </div>
 
   <!-- ── LOG RESULT MODAL ─────────────────────── -->
@@ -943,14 +1112,44 @@
         <button class="odds-close-btn" id="odds-close-btn">✕</button>
       </div>
       <div class="odds-players" id="odds-players"></div>
-      <div class="odds-toggle-row">
-        <button class="odds-toggle active" data-fmt="decimal">Decimal</button>
-        <button class="odds-toggle" data-fmt="american">American</button>
-        <button class="odds-toggle" data-fmt="fractional">Fractional</button>
-      </div>
       <div class="odds-cards" id="odds-cards"></div>
       <div class="odds-h2h" id="odds-h2h"></div>
     </div>
+  </div>
+
+  <!-- ── ODDS SCREEN ──────────────────────────── -->
+  <div id="odds-screen" class="screen hidden">
+    <div class="screen-header">
+      <div class="screen-title">Odds</div>
+    </div>
+    <div class="odds-screen-body scroll-list">
+      <div class="odds-picker-row">
+        <select class="odds-picker" id="odds-p1-pick"></select>
+        <div class="odds-picker-vs">VS</div>
+        <select class="odds-picker" id="odds-p2-pick"></select>
+      </div>
+      <div id="odds-screen-content"></div>
+    </div>
+  </div>
+
+  <!-- ── BOTTOM TAB BAR ───────────────────────── -->
+  <div id="tab-bar">
+    <button class="tab-btn active" id="tab-play">
+      <span class="tab-icon">⚡</span>
+      <span class="tab-label">Play</span>
+    </button>
+    <button class="tab-btn" id="tab-board">
+      <span class="tab-icon">🏆</span>
+      <span class="tab-label">Standings</span>
+    </button>
+    <button class="tab-btn" id="tab-odds-screen">
+      <span class="tab-icon">📊</span>
+      <span class="tab-label">Odds</span>
+    </button>
+    <button class="tab-btn" id="tab-hist">
+      <span class="tab-icon">📋</span>
+      <span class="tab-label">History</span>
+    </button>
   </div>
 
 </div>
@@ -1092,6 +1291,30 @@ function servePos(s1, s2) {
   return [(s1 + s2) % 3 + 1, 3];
 }
 
+// ── Player avatars ────────────────────────────
+const PLAYER_IMAGES = {
+  matt:  'TableTennisicons/Matt.png',
+  ben:   'TableTennisicons/Ben.png',
+  syl:   'TableTennisicons/Syl.png',
+  jakob: 'TableTennisicons/Jakob.png',
+  julz:  'TableTennisicons/Julz.png',
+};
+const AVATAR_COLORS = {
+  1: { bg: 'rgba(67,97,238,0.2)',  border: '#4361ee', color: '#4361ee' },
+  2: { bg: 'rgba(255,109,0,0.2)', border: '#ff6d00', color: '#ff6d00' },
+};
+function playerAvatar(name) {
+  if (!name) return '';
+  const img = PLAYER_IMAGES[name.toLowerCase()];
+  if (img) return `<div class="p-avatar" style="border-color:rgba(255,255,255,0.15)"><img src="${img}" alt="${esc(name)}" onerror="this.style.display='none'"></div>`;
+  const initial = name[0].toUpperCase();
+  const c = AVATAR_COLORS[Object.keys(PLAYER_IMAGES).length % 2 + 1];
+  // deterministic color per name
+  let h = 0; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) & 0xffff;
+  const ac = h % 2 === 0 ? AVATAR_COLORS[1] : AVATAR_COLORS[2];
+  return `<div class="p-avatar initials" style="background:${ac.bg};border-color:${ac.border};color:${ac.color}">${initial}</div>`;
+}
+
 // ── Name normalization ────────────────────────
 const NAME_MAP = { jules: 'Julz' };
 function normalizeName(n) {
@@ -1129,7 +1352,7 @@ function buildElo(history) {
       name,
       elo:    Math.round(ratings[name]),
       change: Math.round(ratings[name] - 1000),
-      avgMargin: avgM,
+      played: games,
     };
   }).sort((a, b) => b.elo - a.elo);
 }
@@ -1225,6 +1448,10 @@ function renderGame(st) {
 
   el('game-p1-name').textContent = st.player1;
   el('game-p2-name').textContent = st.player2;
+  const p1img = PLAYER_IMAGES[(st.player1||'').toLowerCase()];
+  const p2img = PLAYER_IMAGES[(st.player2||'').toLowerCase()];
+  el('icon-1').innerHTML = p1img ? `<img src="${p1img}" alt="${esc(st.player1)}" onerror="this.style.display='none'">` : '';
+  el('icon-2').innerHTML = p2img ? `<img src="${p2img}" alt="${esc(st.player2)}" onerror="this.style.display='none'">` : '';
   setScore('score-1', s1);
   setScore('score-2', s2);
 
@@ -1250,6 +1477,7 @@ function renderGame(st) {
   } else {
     el('winner-overlay').classList.add('hidden');
   }
+  renderGameOdds(st);
 }
 
 function setScore(id, val) {
@@ -1335,6 +1563,43 @@ function calcOdds(p, fmt) {
   return best || `${Math.round(ratio * 10)}/10`;
 }
 
+function renderGameOdds(st) {
+  if (!st || !st.player1 || !st.player2) return;
+  const history = st.history || [];
+  const p1name = st.player1, p2name = st.player2;
+  function pStats(name) {
+    let w = 0, l = 0, ww = 0, tw = 0;
+    for (const g of history) {
+      const hi = Math.max(g.score1||0, g.score2||0), lo = Math.min(g.score1||0, g.score2||0);
+      const wt = 0.5 + 0.5 * (hi > 0 ? (hi-lo)/hi : 0);
+      const gp1 = normalizeName(g.player1), gp2 = normalizeName(g.player2);
+      if (gp1 === name || gp2 === name) {
+        const won = gp1 === name ? g.winner === 1 : g.winner === 2;
+        won ? w++ : l++;
+        if (won) ww += wt;
+        tw += wt;
+      }
+    }
+    const raw = (w+l) ? w/(w+l) : 0.5;
+    const wp  = tw ? ww/tw : 0.5;
+    return { w, l, prob: (w+l) ? 0.5*raw + 0.5*wp : 0.5 };
+  }
+  const s1 = pStats(p1name), s2 = pStats(p2name);
+  const sum = s1.prob + s2.prob;
+  const p1p = sum > 0 ? s1.prob/sum : 0.5, p2p = 1 - p1p;
+  let h1=0, h2=0;
+  for (const g of history) {
+    if (g.player1===p1name && g.player2===p2name) g.winner===1 ? h1++ : h2++;
+    if (g.player1===p2name && g.player2===p1name) g.winner===1 ? h2++ : h1++;
+  }
+  el('gop-bar-p1').style.width = `${Math.round(p1p*100)}%`;
+  el('gop-pct-1').textContent   = `${Math.round(p1p*100)}%`;
+  el('gop-pct-2').textContent   = `${Math.round(p2p*100)}%`;
+  el('gop-val-1').textContent   = calcOdds(p1p, oddsFormat);
+  el('gop-val-2').textContent   = calcOdds(p2p, oddsFormat);
+  el('gop-h2h').textContent     = (h1+h2) > 0 ? `${h1}–${h2}` : 'H2H';
+}
+
 function openOdds() {
   if (!state || !state.player1) return;
   renderOddsModal();
@@ -1354,12 +1619,13 @@ function renderOddsModal() {
       const lo = Math.min(g.score1 || 0, g.score2 || 0);
       const dominance = hi > 0 ? (hi - lo) / hi : 0;
       const weight = 0.5 + 0.5 * dominance; // 11-0 → 1.0, 11-9 → ~0.59
-      if (g.player1 === name) {
+      const gp1 = normalizeName(g.player1), gp2 = normalizeName(g.player2);
+      if (gp1 === name) {
         const won = g.winner === 1;
         won ? w++ : l++;
         if (won) weightedWins += weight;
         totalWeight += weight;
-      } else if (g.player2 === name) {
+      } else if (gp2 === name) {
         const won = g.winner === 2;
         won ? w++ : l++;
         if (won) weightedWins += weight;
@@ -1443,9 +1709,9 @@ function renderHistory(history) {
     return `<div class="history-card">
       <div class="exhi-game-tag" style="color:var(--gold)">🏆 Competition</div>
       <div class="hcard-top">
-        <div class="hcard-player ${p1w?'w':''}">${esc(n1)}</div>
+        <div class="hcard-player ${p1w?'w':''}">${p1w?'🥇 ':''}${esc(n1)}</div>
         <div class="hcard-vs">VS</div>
-        <div class="hcard-player r ${!p1w?'w':''}">${esc(n2)}</div>
+        <div class="hcard-player r ${!p1w?'w':''}">${esc(n2)}${!p1w?' 🥇':''}</div>
       </div>
       <div class="hcard-scores">
         <div class="hcard-score ${p1w?'w':'l'}">${g.score1}</div>
@@ -1466,7 +1732,7 @@ function renderLeaderboard(history) {
 
   if (lbView === 'elo') {
     // ── Elo view ──
-    hdr.innerHTML = `<div class="sth">#</div><div class="sth left">Player</div><div class="sth">ELO</div><div class="sth">+/-</div><div class="sth">AVG</div>`;
+    hdr.innerHTML = `<div class="sth">#</div><div class="sth left">Player</div><div class="sth">ELO</div><div class="sth">+/-</div><div class="sth">PLAYED</div>`;
     hdr.style.gridTemplateColumns = '48px 1fr 64px 54px 54px';
     const board = buildElo(history || []);
     if (!board.length) {
@@ -1478,16 +1744,15 @@ function renderLeaderboard(history) {
     el('lb-list').innerHTML = board.map((p, i) => {
       const chgCls = p.change > 0 ? 'pos' : p.change < 0 ? 'neg' : 'zero';
       const chgTxt = p.change > 0 ? `+${p.change}` : String(p.change);
-      const avgCls = p.avgMargin > 0 ? 'pos' : p.avgMargin < 0 ? 'neg' : 'zero';
-      const avgTxt = (p.avgMargin >= 0 ? '+' : '') + p.avgMargin.toFixed(1);
       return `<div class="srow-elo ${i<3?'top'+(i+1):''}">
         <div class="srank ${rankClass[i]??''}">${i<3 ? rankLabel[i] : i+1}</div>
-        <div class="splayer"><div class="splayer-name">${esc(p.name)}</div></div>
+        <div class="splayer">${playerAvatar(p.name)}<div class="splayer-info"><div class="splayer-name">${esc(p.name)}</div></div></div>
         <div class="selo-rating">${p.elo}</div>
         <div class="selo-change ${chgCls}">${chgTxt}</div>
-        <div class="selo-margin ${avgCls}">${avgTxt}</div>
+        <div class="selo-margin zero">${p.played}</div>
       </div>`;
     }).join('');
+    el('elo-explainer-panel').classList.remove('hidden');
 
   } else {
     // ── W/L view ──
@@ -1521,10 +1786,7 @@ function renderLeaderboard(history) {
       return `<div>
         <div class="srow ${i<3?'top'+(i+1):''}" data-h2h="${i}">
           <div class="srank ${rankClass[i]??''}">${i<3 ? rankLabel[i] : i+1}</div>
-          <div class="splayer">
-            <div class="splayer-name">${esc(p.name)}</div>
-            ${hasH2H ? `<div class="splayer-tap">tap for H2H ▾</div>` : ''}
-          </div>
+          <div class="splayer">${playerAvatar(p.name)}<div class="splayer-info"><div class="splayer-name">${esc(p.name)}</div>${hasH2H ? `<div class="splayer-tap">tap for H2H ▾</div>` : ''}</div></div>
           <div class="sstat w">${p.wins}</div>
           <div class="sstat l">${p.losses}</div>
           <div class="spct">
@@ -1540,9 +1802,32 @@ function renderLeaderboard(history) {
 
 // ── Screen Navigation ─────────────────────────
 function showScreen(name) {
-  ['setup','game','history','leaderboard'].forEach(id =>
-    el(id).classList.toggle('hidden', id !== name)
-  );
+  ['setup','game','history','leaderboard','odds-screen'].forEach(id => {
+    const screen = el(id);
+    if (id === name) {
+      screen.classList.remove('hidden');
+      screen.classList.remove('screen-enter');
+      void screen.offsetWidth;
+      screen.classList.add('screen-enter');
+    } else {
+      screen.classList.add('hidden');
+      screen.classList.remove('screen-enter');
+    }
+  });
+  const tabBar = el('tab-bar');
+  if (name === 'game') {
+    tabBar.classList.add('hidden');
+  } else {
+    tabBar.classList.remove('hidden');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (name === 'setup')        el('tab-play').classList.add('active');
+    if (name === 'history')      el('tab-hist').classList.add('active');
+    if (name === 'leaderboard')  el('tab-board').classList.add('active');
+    if (name === 'odds-screen')  el('tab-odds-screen').classList.add('active');
+  }
+  // hide back buttons when navigating from tabs (not game)
+  el('history-back-btn').classList.toggle('hidden-tab', prevScreen !== 'game');
+  el('lb-back-btn').classList.toggle('hidden-tab', prevScreen !== 'game');
 }
 function showSetup() {
   showScreen('setup');
@@ -1623,7 +1908,125 @@ function openHistory() {
   else renderExhibition(getExhibition());
 }
 el('history-btn').addEventListener('click', openHistory);
-el('setup-history-btn').addEventListener('click', openHistory);
+el('tab-hist').addEventListener('click', () => { prevScreen = 'setup'; openHistory(); });
+el('tab-board').addEventListener('click', () => { prevScreen = 'setup'; showScreen('leaderboard'); renderLeaderboard(state?.history || []); });
+el('tab-odds-screen').addEventListener('click', () => { prevScreen = 'setup'; showScreen('odds-screen'); renderOddsScreen(); });
+
+function renderOddsScreen() {
+  const history = state?.history || [];
+  // Build player list from history
+  const playerSet = new Set();
+  for (const g of history) {
+    if (g.player1) playerSet.add(normalizeName(g.player1));
+    if (g.player2) playerSet.add(normalizeName(g.player2));
+  }
+  const players = [...playerSet].sort();
+  if (players.length < 2) {
+    el('odds-screen-content').innerHTML = '<div class="empty-state">Not enough match data yet.<br>Play some games to see odds here! 🏓</div>';
+    return;
+  }
+
+  // Populate pickers
+  const p1Pick = el('odds-p1-pick'), p2Pick = el('odds-p2-pick');
+  const prevP1 = p1Pick.value, prevP2 = p2Pick.value;
+  p1Pick.innerHTML = players.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  p2Pick.innerHTML = players.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  if (players.includes(prevP1)) p1Pick.value = prevP1;
+  if (players.includes(prevP2)) p2Pick.value = prevP2;
+  // Default: pick first two different players
+  if (p1Pick.value === p2Pick.value) {
+    p2Pick.value = players.find(p => p !== p1Pick.value) || players[1];
+  }
+
+  updateOddsScreenContent();
+}
+
+function updateOddsScreenContent() {
+  const history = state?.history || [];
+  const p1name = el('odds-p1-pick').value;
+  const p2name = el('odds-p2-pick').value;
+  if (!p1name || !p2name || p1name === p2name) {
+    el('odds-screen-content').innerHTML = '<div class="empty-state">Pick two different players.</div>';
+    return;
+  }
+
+  function pStats(name) {
+    let w = 0, l = 0, ww = 0, tw = 0;
+    for (const g of history) {
+      const hi = Math.max(g.score1||0, g.score2||0), lo = Math.min(g.score1||0, g.score2||0);
+      const wt = 0.5 + 0.5 * (hi > 0 ? (hi-lo)/hi : 0);
+      const gp1 = normalizeName(g.player1), gp2 = normalizeName(g.player2);
+      if (gp1 === name || gp2 === name) {
+        const won = gp1 === name ? g.winner === 1 : g.winner === 2;
+        won ? w++ : l++;
+        if (won) ww += wt;
+        tw += wt;
+      }
+    }
+    const raw = (w+l) ? w/(w+l) : 0.5;
+    const wp  = tw ? ww/tw : 0.5;
+    return { w, l, total: w+l, prob: (w+l) ? 0.5*raw + 0.5*wp : 0.5 };
+  }
+
+  const s1 = pStats(p1name), s2 = pStats(p2name);
+  const sum = s1.prob + s2.prob;
+  const p1p = sum > 0 ? s1.prob/sum : 0.5, p2p = 1 - p1p;
+  let h1=0, h2=0;
+  for (const g of history) {
+    if (g.player1===p1name && g.player2===p2name) g.winner===1 ? h1++ : h2++;
+    if (g.player1===p2name && g.player2===p1name) g.winner===1 ? h2++ : h1++;
+  }
+  const h2hTotal = h1 + h2;
+
+  el('odds-screen-content').innerHTML = `
+    <div class="odds-players odds-screen-players">
+      <div class="odds-player-card">
+        <div class="odds-player-name">${esc(p1name)}</div>
+        <div class="odds-player-record">${s1.w}W · ${s1.l}L${!s1.total?' · No data':''}</div>
+        <div class="odds-prob-bar-wrap"><div class="odds-prob-bar p1" style="width:${Math.round(p1p*100)}%"></div></div>
+        <div class="odds-prob-pct p1">${Math.round(p1p*100)}%</div>
+      </div>
+      <div class="odds-player-card">
+        <div class="odds-player-name">${esc(p2name)}</div>
+        <div class="odds-player-record">${s2.w}W · ${s2.l}L${!s2.total?' · No data':''}</div>
+        <div class="odds-prob-bar-wrap"><div class="odds-prob-bar p2" style="width:${Math.round(p2p*100)}%"></div></div>
+        <div class="odds-prob-pct p2">${Math.round(p2p*100)}%</div>
+      </div>
+    </div>
+    <div class="odds-cards odds-screen-cards">
+      <div class="odds-card">
+        <div class="odds-card-label">${esc(p1name)}</div>
+        <div class="odds-card-value p1">${calcOdds(p1p, oddsFormat)}</div>
+      </div>
+      <div class="odds-card">
+        <div class="odds-card-label">${esc(p2name)}</div>
+        <div class="odds-card-value p2">${calcOdds(p2p, oddsFormat)}</div>
+      </div>
+    </div>
+    <div class="odds-h2h">
+      <div class="odds-h2h-title">Head to Head</div>
+      ${h2hTotal === 0
+        ? `<div class="odds-h2h-none">No previous H2H matches</div>`
+        : `<div class="odds-h2h-row">
+            <div class="odds-h2h-name">${esc(p1name)}</div>
+            <div class="odds-h2h-bar-wrap"><div class="odds-h2h-bar" style="width:${Math.round(h1/h2hTotal*100)}%"></div></div>
+            <div class="odds-h2h-rec">${h1}–${h2}</div>
+          </div>
+          <div class="odds-h2h-row" style="margin-top:6px">
+            <div class="odds-h2h-name">${esc(p2name)}</div>
+            <div class="odds-h2h-bar-wrap"><div class="odds-h2h-bar" style="width:${Math.round(h2/h2hTotal*100)}%"></div></div>
+            <div class="odds-h2h-rec">${h2}–${h1}</div>
+          </div>`
+      }
+    </div>`;
+}
+
+el('odds-p1-pick').addEventListener('change', updateOddsScreenContent);
+el('odds-p2-pick').addEventListener('change', updateOddsScreenContent);
+el('tab-play').addEventListener('click', () => {
+  if (state?.status === 'playing' || state?.status === 'finished') showScreen('game');
+  else showSetup();
+});
 el('history-back-btn').addEventListener('click', () => {
   prevScreen === 'game' ? showScreen('game') : showSetup();
 });
@@ -1665,6 +2068,7 @@ document.addEventListener('click', e => {
   if (!toggle) return;
   oddsFormat = toggle.dataset.fmt;
   if (!el('odds-modal').classList.contains('hidden')) renderOddsModal();
+  if (!el('game').classList.contains('hidden')) renderGameOdds(state);
 });
 
 // Match type selector
@@ -1694,7 +2098,6 @@ function openLeaderboard() {
   showScreen('leaderboard'); renderLeaderboard(state?.history || []);
 }
 el('lb-btn').addEventListener('click', openLeaderboard);
-el('setup-lb-btn').addEventListener('click', openLeaderboard);
 el('lb-back-btn').addEventListener('click', () => {
   prevScreen === 'game' ? showScreen('game') : showSetup();
 });
@@ -1704,6 +2107,7 @@ el('lb-wl-btn').addEventListener('click', () => {
   lbView = 'wl';
   el('lb-wl-btn').classList.add('active');
   el('lb-elo-btn').classList.remove('active');
+  el('elo-explainer-panel').classList.add('hidden');
   renderLeaderboard(state?.history || []);
 });
 el('lb-elo-btn').addEventListener('click', () => {
