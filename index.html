@@ -69,8 +69,7 @@
        SETUP SCREEN
     ══════════════════════════════════════════ */
     #setup {
-      align-items: stretch; overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      align-items: stretch; overflow: hidden;
       padding: 0;
     }
 
@@ -127,6 +126,11 @@
       padding: 10px 16px 14px;
       display: flex; flex-direction: column; gap: 8px;
       flex: 1; justify-content: space-evenly;
+      overflow-y: auto; -webkit-overflow-scrolling: touch;
+    }
+    .setup-log-footer {
+      padding: 8px 16px 10px;
+      flex-shrink: 0;
     }
 
     /* Player cards */
@@ -229,6 +233,14 @@
     }
     .start-btn.ready { opacity: 1; pointer-events: auto; box-shadow: 0 4px 24px rgba(6,214,160,0.35); }
     .start-btn.ready:active { transform: scale(0.98); }
+    .log-manual-btn {
+      padding: 11px; border-radius: 14px; margin-top: 8px;
+      background: none; border: 1.5px solid rgba(255,255,255,0.35);
+      color: var(--text2); font-family: inherit; font-size: 13px;
+      font-weight: 700; letter-spacing: 0.5px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .log-manual-btn:active { color: var(--text); border-color: var(--text2); }
 
     /* ══════════════════════════════════════════
        GAME SCREEN
@@ -444,6 +456,12 @@
     }
     .winner-sparks  { font-size: 32px; margin-bottom: 8px; animation: sparkleSpin 2s linear infinite; }
     @keyframes sparkleSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+    .winner-bet-result {
+      margin: 4px auto 16px; padding: 10px 18px; border-radius: 14px;
+      font-size: 15px; font-weight: 800; letter-spacing: 0.3px; display: inline-block;
+    }
+    .winner-bet-result.won { background: rgba(6,214,160,0.18); border: 1px solid rgba(6,214,160,0.45); color: var(--green); }
+    .winner-bet-result.lost { background: rgba(255,80,80,0.15); border: 1px solid rgba(255,80,80,0.4); color: #ff6b6b; }
     .winner-name {
       font-family: var(--bebas); font-size: 48px; letter-spacing: 3px;
       color: var(--gold); line-height: 1; margin-bottom: 4px;
@@ -452,7 +470,7 @@
     .winner-sub     { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text2); margin-bottom: 20px; }
     .winner-score {
       font-family: var(--bebas); font-size: 52px; letter-spacing: -1px;
-      margin-bottom: 28px; color: var(--text);
+      margin-bottom: 14px; color: var(--text);
     }
     .winner-score .dim { color: var(--muted); }
     .new-game-btn {
@@ -535,6 +553,14 @@
     .selo-margin.pos { color: var(--green); }
     .selo-margin.neg { color: #ef476f; }
     .selo-margin.zero { color: var(--muted); }
+    .splayer-sub { font-size: 11px; color: var(--text2); margin-top: 2px; letter-spacing: 0.2px; }
+    .streak-inline { color: #ff9500; font-weight: 700; }
+    .streak-banner {
+      margin: 10px 16px 2px; padding: 4px 16px;
+      font-size: 13px; font-weight: 700; color: #ff9500; letter-spacing: 0.3px;
+    }
+    .h2h-best-run { font-size: 11px; color: var(--text2); padding: 6px 16px 2px; }
+    .h2h-best-run span { color: var(--gold); font-weight: 700; }
     .elo-explainer {
       margin: 16px; padding: 14px 16px;
       background: var(--panel2); border: 1px solid var(--border);
@@ -604,6 +630,7 @@
       color: var(--text);
     }
     .splayer-tap { font-size: 10px; color: var(--muted); margin-top: 1px; letter-spacing: 0.3px; }
+    /* kept for H2H toggle text update */
     .p-avatar {
       flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
@@ -613,7 +640,7 @@
       width: 32px; height: 32px; border-radius: 50%;
       border: 2px solid var(--border);
     }
-    .p-avatar img { width: 44px; height: 44px; object-fit: contain; }
+    .p-avatar img { width: 60px; height: 60px; object-fit: contain; }
 
     .sstat {
       font-family: var(--bebas); font-size: 28px; letter-spacing: 1px;
@@ -737,6 +764,158 @@
     .mt-icon { font-size: 20px; }
     .mt-label { font-size: 13px; font-weight: 800; color: var(--text); }
     .mt-sub { font-size: 10px; color: var(--text2); }
+
+    /* ── Auth Screen ── */
+    #auth-screen {
+      position: fixed; inset: 0; z-index: 200;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 24px;
+      gap: 0;
+    }
+    #auth-screen.hidden { display: none !important; }
+    .auth-logo {
+      font-family: var(--bebas); font-size: 42px; letter-spacing: 6px;
+      color: var(--text); margin-bottom: 6px; text-align: center;
+    }
+    .auth-logo span { color: var(--gold); }
+    .auth-sub {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 3px; color: var(--text2); margin-bottom: 32px; text-align: center;
+    }
+    .auth-card {
+      background: var(--panel2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 24px 20px;
+      width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .auth-title {
+      font-family: var(--bebas); font-size: 20px; letter-spacing: 2px;
+      color: var(--text); text-align: center; margin-bottom: 4px;
+    }
+    .auth-input {
+      width: 100%; padding: 12px 16px;
+      background: var(--panel3); border: 1px solid var(--border);
+      border-radius: 12px; color: var(--text); font-family: inherit;
+      font-size: 15px; outline: none; transition: border-color 0.2s;
+      -webkit-appearance: none; appearance: none;
+    }
+    .auth-input:focus { border-color: rgba(255,255,255,0.35); }
+    .auth-btn {
+      padding: 14px; border-radius: 13px; border: none;
+      font-family: inherit; font-size: 15px; font-weight: 800;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .auth-btn:active { opacity: 0.8; }
+    .auth-btn.primary {
+      background: linear-gradient(135deg, var(--p1) 0%, #2040cc 100%);
+      color: #fff;
+    }
+    .auth-btn.secondary {
+      background: var(--panel3); border: 1px solid var(--border);
+      color: var(--text2);
+    }
+    .auth-error {
+      font-size: 13px; color: #ef476f;
+      background: rgba(239,71,111,0.1); border: 1px solid rgba(239,71,111,0.3);
+      border-radius: 10px; padding: 10px 14px; text-align: center;
+      display: none;
+    }
+
+    /* ── Balance badge ── */
+    .balance-badge {
+      font-size: 12px; font-weight: 800; color: var(--gold);
+      background: rgba(255,200,69,0.12); border: 1px solid rgba(255,200,69,0.25);
+      border-radius: 20px; padding: 3px 10px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 3px;
+    }
+
+    /* ── Bet Button ── */
+    .foot-btn.bet-btn {
+      color: var(--gold);
+    }
+
+    /* ── Bet Modal ── */
+    #bet-form-body { display: flex; flex-direction: column; gap: 14px; }
+    .bet-players { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .bet-player-card {
+      background: var(--panel3); border-radius: 12px; padding: 14px 10px;
+      text-align: center; border: 2px solid var(--border);
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+    }
+    .bet-player-card.selected-p1 { border-color: var(--p1); background: rgba(67,97,238,0.12); box-shadow: 0 0 14px rgba(67,97,238,0.2); }
+    .bet-player-card.selected-p2 { border-color: var(--p2); background: rgba(255,109,0,0.12); box-shadow: 0 0 14px rgba(255,109,0,0.2); }
+    .bet-player-name { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bet-player-pct { font-family: var(--bebas); font-size: 28px; letter-spacing: 1px; margin-bottom: 2px; }
+    .bet-player-pct.p1 { color: var(--p1); }
+    .bet-player-pct.p2 { color: var(--p2); }
+    .bet-player-odds { font-size: 12px; font-weight: 800; color: var(--muted); }
+    .bet-amount-row { display: flex; flex-direction: column; gap: 10px; }
+    .bet-amount-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text2); }
+    .bet-presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .bet-preset-btn {
+      padding: 12px 4px; border-radius: 12px; border: 1.5px solid var(--border);
+      background: var(--panel3); color: var(--text); font-family: var(--bebas);
+      font-size: 22px; letter-spacing: 1px; cursor: pointer; text-align: center;
+      transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+    }
+    .bet-preset-btn.active { border-color: var(--green); background: rgba(6,214,160,0.15); color: var(--green); }
+    .bet-preset-btn:active { opacity: 0.7; }
+    .bet-custom-row { display: flex; align-items: center; gap: 8px; }
+    .bet-custom-label { font-size: 12px; font-weight: 800; color: var(--text2); white-space: nowrap; }
+    .bet-amount-input {
+      flex: 1; padding: 10px 14px; box-sizing: border-box;
+      background: var(--panel3); border: 1.5px solid var(--border);
+      border-radius: 12px; color: var(--text); font-family: var(--bebas);
+      font-size: 26px; letter-spacing: 1px; outline: none; text-align: center;
+      transition: border-color 0.2s; -webkit-appearance: none; appearance: none;
+    }
+    .bet-amount-input:focus { border-color: rgba(255,255,255,0.35); }
+    .bet-payout-row { text-align: center; font-size: 13px; color: var(--text2); background: var(--panel3); border-radius: 10px; padding: 10px; }
+    .bet-zone-pill {
+      position: absolute; top: 16%; left: 50%; transform: translateX(-50%);
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 12px; border-radius: 20px;
+      background: rgba(6,214,160,0.15); border: 1px solid rgba(6,214,160,0.35);
+      font-size: 11px; font-weight: 800; color: var(--green);
+      letter-spacing: 0.3px; pointer-events: none; white-space: nowrap; z-index: 2;
+    }
+    .bet-zone-pill.lost { background: rgba(255,80,80,0.15); border-color: rgba(255,80,80,0.35); color: #ff6b6b; }
+    .bet-zone-pill.won  { background: rgba(6,214,160,0.25); border-color: rgba(6,214,160,0.6); color: var(--green); }
+    .bet-payout-val { color: var(--green); font-weight: 800; font-size: 15px; }
+    .bet-confirm-btn {
+      padding: 15px; border-radius: 13px; border: none; width: 100%;
+      background: linear-gradient(135deg, var(--green) 0%, #029e75 100%);
+      color: #fff; font-family: inherit; font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .bet-confirm-btn:active { opacity: 0.8; }
+    .bet-confirm-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .bet-cancel-btn {
+      padding: 13px; border-radius: 13px; width: 100%; border: 1.5px solid var(--border);
+      background: none; color: var(--text2); font-family: inherit; font-size: 14px;
+      font-weight: 700; cursor: pointer; transition: all 0.15s;
+    }
+    .bet-cancel-btn:active { background: var(--panel3); }
+    .bet-placed-info {
+      background: rgba(6,214,160,0.1); border: 1px solid rgba(6,214,160,0.3);
+      border-radius: 12px; padding: 14px; text-align: center;
+      font-size: 14px; color: var(--green);
+    }
+    .bet-error {
+      font-size: 13px; color: #ef476f;
+      background: rgba(239,71,111,0.1); border: 1px solid rgba(239,71,111,0.3);
+      border-radius: 10px; padding: 10px 14px; text-align: center;
+    }
+
+    /* ── Wallet Leaderboard ── */
+    .wallet-row { display: grid; grid-template-columns: 48px 1fr 80px 70px; padding: 12px 16px; gap: 6px; align-items: center; border-bottom: 1px solid var(--border); background: var(--panel); }
+    .wallet-row:nth-child(even) { background: var(--panel2); }
+    .wallet-balance { font-family: var(--bebas); font-size: 18px; letter-spacing: 1px; color: var(--gold); text-align: right; }
+    .wallet-pl { font-size: 12px; font-weight: 800; text-align: right; }
+    .wallet-pl.pos { color: var(--green); }
+    .wallet-pl.neg { color: #ef476f; }
+    .wallet-pl.zero { color: var(--muted); }
     .history-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--panel); flex-shrink: 0; }
     .hist-tab { flex: 1; padding: 12px 10px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text2); font-size: 11px; font-weight: 800; font-family: inherit; cursor: pointer; transition: all 0.2s; margin-bottom: -1px; text-transform: uppercase; letter-spacing: 1.2px; }
     .hist-tab.active { color: var(--text); border-bottom-color: rgba(255,255,255,0.5); }
@@ -854,9 +1033,57 @@
       .tab-label { font-size: 8px; letter-spacing: 0.5px; }
       .tab-icon { font-size: 18px; }
     }
+    /* ── Points screen ── */
+    #points-screen { overflow: hidden; }
+    .points-scroll { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .pts-card { background: var(--panel); border-radius: 14px; padding: 14px 16px; border: 1px solid var(--border); }
+    .pts-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .pts-card-name { font-size: 15px; font-weight: 800; flex: 1; }
+    .pts-card-diff { font-family: var(--bebas); font-size: 20px; letter-spacing: 1px; }
+    .pts-card-diff.pos { color: var(--green); }
+    .pts-card-diff.neg { color: #ef476f; }
+    .pts-card-diff.zero { color: var(--muted); }
+    .pts-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .pts-bar-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); width: 36px; flex-shrink: 0; }
+    .pts-bar-track { flex: 1; height: 8px; background: var(--panel3); border-radius: 4px; overflow: hidden; }
+    .pts-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .pts-bar-fill.won { background: var(--green); }
+    .pts-bar-fill.lost { background: #ef476f; }
+    .pts-bar-val { font-family: var(--bebas); font-size: 18px; letter-spacing: 1px; width: 36px; text-align: right; flex-shrink: 0; }
+    .pts-bar-val.won { color: var(--green); }
+    .pts-bar-val.lost { color: #ef476f; }
+    .pts-divider { height: 1px; background: var(--border); margin: 10px 0; }
+    .pts-vs-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+    .pts-opp-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .pts-opp-name { font-size: 12px; font-weight: 700; width: 46px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text2); }
+    .pts-opp-bars { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+    .pts-opp-bar-row { display: flex; align-items: center; gap: 5px; }
+    .pts-opp-track { flex: 1; height: 6px; background: var(--panel3); border-radius: 3px; overflow: hidden; }
+    .pts-opp-fill { height: 100%; border-radius: 3px; }
+    .pts-opp-fill.won { background: var(--green); }
+    .pts-opp-fill.lost { background: #ef476f; }
+    .pts-opp-val { font-family: var(--bebas); font-size: 14px; width: 26px; text-align: right; flex-shrink: 0; }
+    .pts-opp-val.won { color: var(--green); }
+    .pts-opp-val.lost { color: #ef476f; }
   </style>
 </head>
 <body>
+<!-- ── AUTH SCREEN ─────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-logo">PING PONG <span>BOYS</span></div>
+  <div class="auth-sub">Sign in to place bets & track your wallet</div>
+  <div class="auth-card">
+    <div class="auth-title" id="auth-title">SIGN IN</div>
+    <input class="auth-input hidden" id="auth-name" type="text" placeholder="Your name (e.g. Ben)" autocomplete="off" maxlength="18">
+    <input class="auth-input" id="auth-email" type="email" placeholder="Email address" autocomplete="email">
+    <input class="auth-input" id="auth-password" type="password" placeholder="Password" autocomplete="current-password">
+    <div class="auth-error" id="auth-error"></div>
+    <button class="auth-btn primary" id="auth-login-btn">Log In</button>
+    <button class="auth-btn secondary" id="auth-signup-btn">Create Account</button>
+    <button class="auth-btn secondary" id="auth-back-btn" style="display:none;margin-top:4px;font-size:11px;opacity:0.6">← Back to Log In</button>
+  </div>
+</div>
+
 <div id="app">
 
   <!-- ── SETUP ──────────────────────────────── -->
@@ -866,6 +1093,10 @@
         <div class="setup-title">PING PONG <span>BOYS</span></div>
       </div>
       <div class="setup-session" id="setup-session-id"></div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px;">
+        <span class="balance-badge hidden" id="balance-badge">💰 $1000</span>
+        <button id="signout-btn" style="display:none;background:none;border:1px solid rgba(255,255,255,0.2);color:var(--muted);font-size:10px;font-weight:700;font-family:inherit;padding:4px 10px;border-radius:20px;cursor:pointer;letter-spacing:0.5px;">Sign Out</button>
+      </div>
     </div>
 
 
@@ -884,11 +1115,12 @@
           </div>
           <input class="field-input" id="p1-input" type="text" placeholder="Enter name…" maxlength="18" autocomplete="off">
           <div class="name-chips" data-target="p1-input" data-which="1">
-            <button class="name-chip">Matt</button>
-            <button class="name-chip">Syl</button>
-            <button class="name-chip">Jakob</button>
-            <button class="name-chip">Ben</button>
-            <button class="name-chip">Julz</button>
+            <button type="button" class="name-chip" data-name="Matt">Matt</button>
+            <button type="button" class="name-chip" data-name="Syl">Syl</button>
+            <button type="button" class="name-chip" data-name="Jakob">Jakob</button>
+            <button type="button" class="name-chip" data-name="Ben">Ben</button>
+            <button type="button" class="name-chip" data-name="Julz">Julz</button>
+            <button type="button" class="name-chip" data-name="Dan">Dan</button>
           </div>
         </div>
       </div>
@@ -902,11 +1134,12 @@
           </div>
           <input class="field-input" id="p2-input" type="text" placeholder="Enter name…" maxlength="18" autocomplete="off">
           <div class="name-chips" data-target="p2-input" data-which="2">
-            <button class="name-chip">Matt</button>
-            <button class="name-chip">Syl</button>
-            <button class="name-chip">Jakob</button>
-            <button class="name-chip">Ben</button>
-            <button class="name-chip">Julz</button>
+            <button type="button" class="name-chip" data-name="Matt">Matt</button>
+            <button type="button" class="name-chip" data-name="Syl">Syl</button>
+            <button type="button" class="name-chip" data-name="Jakob">Jakob</button>
+            <button type="button" class="name-chip" data-name="Ben">Ben</button>
+            <button type="button" class="name-chip" data-name="Julz">Julz</button>
+            <button type="button" class="name-chip" data-name="Dan">Dan</button>
           </div>
         </div>
       </div>
@@ -946,6 +1179,9 @@
       <button class="start-btn" id="start-btn">PLAY →</button>
 
     </div>
+    <div class="setup-log-footer">
+      <button class="log-manual-btn" id="setup-log-btn">+ Log Result Manually</button>
+    </div>
   </div>
 
   <!-- ── GAME ───────────────────────────────── -->
@@ -969,6 +1205,7 @@
         <div class="zone-icon" id="icon-1"></div>
         <div class="pname" id="game-p1-name">P1</div>
         <div class="serve-pips" id="pips-1"></div>
+        <div class="bet-zone-pill hidden" id="bet-pill-1"></div>
         <div class="pscore" id="score-1">0</div>
       </div>
 
@@ -982,6 +1219,7 @@
         <div class="zone-icon" id="icon-2"></div>
         <div class="pname" id="game-p2-name">P2</div>
         <div class="serve-pips" id="pips-2"></div>
+        <div class="bet-zone-pill hidden" id="bet-pill-2"></div>
         <div class="pscore" id="score-2">0</div>
       </div>
     </div>
@@ -1008,6 +1246,7 @@
 
     <div class="game-footer">
       <button class="foot-btn" id="undo-btn" disabled>↩ Undo</button>
+      <button class="foot-btn sm bet-btn hidden" id="bet-btn">🎲 Bet</button>
       <button class="foot-btn sm" id="game-log-btn">📝 Log</button>
     </div>
   </div>
@@ -1037,7 +1276,9 @@
     <div class="lb-view-toggle">
       <button class="lb-view-btn active" id="lb-wl-btn">W/L Record</button>
       <button class="lb-view-btn" id="lb-elo-btn">Elo Rating</button>
+      <button class="lb-view-btn" id="lb-wallet-btn">💰 Wallets</button>
     </div>
+    <div id="streak-banner" class="streak-banner hidden"></div>
     <div class="standings-header" id="standings-header">
       <div class="sth">#</div>
       <div class="sth left">Player</div>
@@ -1063,9 +1304,9 @@
         <div class="result-player-inputs">
           <input class="field-input" id="result-p1" placeholder="Player 1…" maxlength="18" autocomplete="off">
           <div class="name-chips" data-target="result-p1" data-which="1">
-            <button class="name-chip">Matt</button><button class="name-chip">Syl</button>
-            <button class="name-chip">Jakob</button><button class="name-chip">Ben</button>
-            <button class="name-chip">Julz</button>
+            <button type="button" class="name-chip" data-name="Matt">Matt</button><button type="button" class="name-chip" data-name="Syl">Syl</button>
+            <button type="button" class="name-chip" data-name="Jakob">Jakob</button><button type="button" class="name-chip" data-name="Ben">Ben</button>
+            <button type="button" class="name-chip" data-name="Julz">Julz</button><button type="button" class="name-chip" data-name="Dan">Dan</button>
           </div>
         </div>
         <input class="score-big-input" id="result-s1" type="number" inputmode="numeric" min="0" max="30" placeholder="0">
@@ -1077,9 +1318,9 @@
         <div class="result-player-inputs">
           <input class="field-input" id="result-p2" placeholder="Player 2…" maxlength="18" autocomplete="off">
           <div class="name-chips" data-target="result-p2" data-which="2">
-            <button class="name-chip">Matt</button><button class="name-chip">Syl</button>
-            <button class="name-chip">Jakob</button><button class="name-chip">Ben</button>
-            <button class="name-chip">Julz</button>
+            <button type="button" class="name-chip" data-name="Matt">Matt</button><button type="button" class="name-chip" data-name="Syl">Syl</button>
+            <button type="button" class="name-chip" data-name="Jakob">Jakob</button><button type="button" class="name-chip" data-name="Ben">Ben</button>
+            <button type="button" class="name-chip" data-name="Julz">Julz</button><button type="button" class="name-chip" data-name="Dan">Dan</button>
           </div>
         </div>
         <input class="score-big-input" id="result-s2" type="number" inputmode="numeric" min="0" max="30" placeholder="0">
@@ -1098,6 +1339,7 @@
       <div class="winner-name" id="winner-name-display"></div>
       <div class="winner-sub">Wins the game</div>
       <div class="winner-score" id="winner-score-display"></div>
+      <div class="winner-bet-result hidden" id="winner-bet-result"></div>
       <button class="new-game-btn" id="new-game-btn">NEW GAME →</button>
     </div>
   </div>
@@ -1132,6 +1374,46 @@
     </div>
   </div>
 
+  <!-- ── POINTS SCREEN ────────────────────────── -->
+  <div id="points-screen" class="screen hidden">
+    <div class="screen-header">
+      <div class="screen-title">Points</div>
+    </div>
+    <div class="scroll-list">
+      <div class="points-scroll" id="points-list"></div>
+    </div>
+  </div>
+
+  <!-- ── BET MODAL ─────────────────────────────── -->
+  <div id="bet-modal" class="modal-overlay hidden">
+    <div class="modal-backdrop" id="bet-backdrop"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="modal-title">PLACE A BET</div>
+        <button class="odds-close-btn" id="bet-close-btn">✕</button>
+      </div>
+      <div id="bet-placed-info" class="bet-placed-info hidden"></div>
+      <div id="bet-form-body">
+        <div class="bet-players" id="bet-players"></div>
+        <div class="bet-amount-row">
+          <div class="bet-amount-label">Amount ($)</div>
+          <input class="bet-amount-input" id="bet-amount" type="number" min="1" max="50" value="10" inputmode="numeric" pattern="[0-9]*" placeholder="$">
+          <div class="bet-presets" id="bet-presets">
+            <button class="bet-preset-btn" data-val="5">$5</button>
+            <button class="bet-preset-btn active" data-val="10">$10</button>
+            <button class="bet-preset-btn" data-val="25">$25</button>
+            <button class="bet-preset-btn" data-val="50">$50</button>
+          </div>
+        </div>
+        <div class="bet-payout-row">Potential win: <span class="bet-payout-val" id="bet-payout">$0.00</span></div>
+        <div class="bet-error hidden" id="bet-error"></div>
+        <button class="bet-confirm-btn" id="bet-confirm-btn" disabled>Select a player to bet</button>
+        <button class="bet-cancel-btn" id="bet-cancel-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ── BOTTOM TAB BAR ───────────────────────── -->
   <div id="tab-bar">
     <button class="tab-btn active" id="tab-play">
@@ -1142,9 +1424,9 @@
       <span class="tab-icon">🏆</span>
       <span class="tab-label">Standings</span>
     </button>
-    <button class="tab-btn" id="tab-odds-screen">
-      <span class="tab-icon">📊</span>
-      <span class="tab-label">Odds</span>
+    <button class="tab-btn" id="tab-points">
+      <span class="tab-icon">📈</span>
+      <span class="tab-label">Points</span>
     </button>
     <button class="tab-btn" id="tab-hist">
       <span class="tab-icon">📋</span>
@@ -1174,6 +1456,63 @@ const USE_FIREBASE = firebaseConfig.apiKey !== 'YOUR_API_KEY';
 const sessionId = 'PINGPONGBOYS';
 el('setup-session-id').textContent = `Session · ${sessionId}`;
 
+// ── Auth state ────────────────────────────────
+let currentUser = null;    // { uid, name, email, balance }
+let _db = null;            // Firestore db instance (set if Firebase loads)
+let placedBetGameId = null; // gameId of a bet already placed this session
+let activeBetSlip = null;  // { player, amount, payout }
+
+function showBetSlip(player, amount, payout, result) {
+  if (!player || !state) return;
+  // Figure out which zone this player is in
+  const isP1 = player === state.player1;
+  const pill = el(isP1 ? 'bet-pill-1' : 'bet-pill-2');
+  const other = el(isP1 ? 'bet-pill-2' : 'bet-pill-1');
+  other.classList.add('hidden');
+  pill.classList.remove('hidden', 'won', 'lost');
+  if (result === 'won') {
+    pill.classList.add('won');
+    pill.textContent = `🎉 Won $${payout.toFixed(2)}`;
+  } else if (result === 'lost') {
+    pill.classList.add('lost');
+    pill.textContent = `😬 Lost $${amount}`;
+  } else {
+    pill.textContent = `🎲 $${amount} → $${payout.toFixed(2)}`;
+  }
+}
+function clearBetSlip() {
+  activeBetSlip = null;
+  el('bet-pill-1').classList.add('hidden');
+  el('bet-pill-2').classList.add('hidden');
+  el('winner-bet-result').classList.add('hidden');
+}
+
+function updateBalanceDisplay() {
+  if (currentUser) {
+    el('balance-badge').textContent = `💰 $${currentUser.balance}`;
+    el('balance-badge').classList.remove('hidden');
+    el('signout-btn').style.display = 'inline-flex';
+  } else {
+    el('balance-badge').classList.add('hidden');
+    el('signout-btn').style.display = 'none';
+  }
+  updateBetButtonVisibility();
+}
+
+function updateBetButtonVisibility() {
+  const btn = el('bet-btn');
+  if (!btn) return;
+  const st = state;
+  if (!currentUser || !st || st.status !== 'playing') {
+    btn.classList.add('hidden'); return;
+  }
+  const totalPts = (st.points || []).length;
+  if (totalPts >= 3 || placedBetGameId === st.gameId) {
+    btn.classList.add('hidden'); return;
+  }
+  btn.classList.remove('hidden');
+}
+
 // Default: local mode (safe — if Firebase import throws, app still works fully)
 let _ls = null, _lcb = null, _lexhi = [];
 let saveState      = async (s) => { _ls = s; _lcb?.(_ls); };
@@ -1183,12 +1522,14 @@ let getExhibition  = () => _lexhi;
 
 if (USE_FIREBASE) {
   try {
-    const [{ initializeApp }, { getFirestore, doc, onSnapshot, setDoc }] =
+    const [{ initializeApp }, { getFirestore, doc, getDoc, onSnapshot, setDoc, collection, query, where, getDocs }] =
       await Promise.all([
         import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js'),
         import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js'),
       ]);
-    const db = getFirestore(initializeApp(firebaseConfig));
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    _db = db;
 
     // Game state is per-session (live score sync via URL hash)
     const gameRef  = doc(db, 'tt_sessions', sessionId);
@@ -1247,16 +1588,205 @@ if (USE_FIREBASE) {
     };
 
     el('live-label').textContent = `Live · ${sessionId}`;
+
+    // ── Firebase Auth ──────────────────────────
+    const { getAuth, onAuthStateChanged, signInWithEmailAndPassword,
+            createUserWithEmailAndPassword, signOut: fbSignOut } =
+      await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const auth = getAuth(app);
+
+    async function loadUserDoc(uid) {
+      const snap = await getDoc(doc(db, 'users', uid));
+      if (snap.exists()) return snap.data();
+      return null;
+    }
+
+    // Bet placement
+    window._placeBet = async function(pickedPlayer, amount) {
+      if (!currentUser || !state || !state.gameId) return;
+      const gameId = state.gameId;
+      const p1p = getGameP1Prob();
+      const pickedOdds = pickedPlayer === state.player1
+        ? parseFloat((1 / p1p).toFixed(2))
+        : parseFloat((1 / (1 - p1p)).toFixed(2));
+
+      try {
+        const betId = `${gameId}_${currentUser.uid}`;
+        await setDoc(doc(db, 'bets', betId), {
+          uid: currentUser.uid,
+          userName: currentUser.name,
+          gameId,
+          player1: state.player1,
+          player2: state.player2,
+          pickedPlayer,
+          amount,
+          odds: pickedOdds,
+          placedAt: new Date().toISOString(),
+          status: 'pending',
+          payout: 0,
+        });
+        const newBal = currentUser.balance - amount;
+        await setDoc(doc(db, 'users', currentUser.uid), {
+          balance: newBal,
+          totalBets: (currentUser.totalBets || 0) + 1,
+        }, { merge: true });
+        currentUser.balance = newBal;
+        currentUser.totalBets = (currentUser.totalBets || 0) + 1;
+        placedBetGameId = gameId;
+        updateBalanceDisplay();
+        return { pickedPlayer, amount, odds: pickedOdds };
+      } catch (e) {
+        console.error('placeBet error', e);
+        throw e;
+      }
+    };
+
+    // Bet settlement
+    window._settleBets = async function(gameId, winner, player1, player2) {
+      if (!gameId) return;
+      try {
+        const winnerName = winner === 1 ? player1 : player2;
+        const snap = await getDocs(query(collection(db, 'bets'), where('gameId', '==', gameId)));
+        for (const betDoc of snap.docs) {
+          const b = betDoc.data();
+          if (b.status !== 'pending') continue;
+          const won = b.pickedPlayer === winnerName;
+          const payout = won ? Math.round(b.amount * b.odds * 100) / 100 : 0;
+          await setDoc(betDoc.ref, { status: won ? 'won' : 'lost', payout }, { merge: true });
+          if (won && payout > 0) {
+            const uSnap = await getDoc(doc(db, 'users', b.uid));
+            if (uSnap.exists()) {
+              const ud = uSnap.data();
+              await setDoc(doc(db, 'users', b.uid), {
+                balance: (ud.balance || 0) + payout,
+                totalWon: (ud.totalWon || 0) + payout,
+              }, { merge: true });
+              if (currentUser && currentUser.uid === b.uid) {
+                currentUser.balance = (ud.balance || 0) + payout;
+                currentUser.totalWon = (ud.totalWon || 0) + payout;
+                updateBalanceDisplay();
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.error('settleBets error', e);
+      }
+    };
+
+    // Wallet leaderboard
+    window._loadWallets = async function() {
+      try {
+        const snap = await getDocs(collection(db, 'users'));
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      } catch (e) { return []; }
+    };
+
+    onAuthStateChanged(auth, async (fbUser) => {
+      if (fbUser) {
+        // Load or create user doc
+        let userData = await loadUserDoc(fbUser.uid);
+        if (!userData) {
+          const name = fbUser.email.split('@')[0];
+          userData = { name, email: fbUser.email, balance: 1000, totalBets: 0, totalWon: 0 };
+          await setDoc(doc(db, 'users', fbUser.uid), userData);
+        }
+        currentUser = { uid: fbUser.uid, name: userData.name, email: userData.email,
+          balance: userData.balance ?? 1000, totalBets: userData.totalBets ?? 0,
+          totalWon: userData.totalWon ?? 0 };
+        el('auth-screen').classList.add('hidden');
+        updateBalanceDisplay();
+      } else {
+        currentUser = null;
+        el('auth-screen').classList.remove('hidden');
+        updateBalanceDisplay();
+      }
+    });
+
+    function authErrMsg(e) {
+      const c = e.code || '';
+      if (c === 'auth/operation-not-allowed')   return 'Email sign-in not enabled yet — check Firebase console.';
+      if (c === 'auth/user-not-found' || c === 'auth/wrong-password' || c === 'auth/invalid-credential') return 'Incorrect email or password.';
+      if (c === 'auth/email-already-in-use')    return 'Account already exists — try logging in instead.';
+      if (c === 'auth/weak-password')           return 'Password must be at least 6 characters.';
+      if (c === 'auth/invalid-email')           return 'Invalid email address.';
+      return e.message.replace('Firebase: ', '').replace(/\s*\(auth\/[^)]*\)\.?/, '').trim() || 'Something went wrong.';
+    }
+
+    el('auth-login-btn').addEventListener('click', async () => {
+      const email = el('auth-email').value.trim();
+      const pass  = el('auth-password').value;
+      el('auth-error').style.display = 'none';
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+      } catch (e) {
+        el('auth-error').textContent = authErrMsg(e);
+        el('auth-error').style.display = 'block';
+      }
+    });
+
+    let authMode = 'login';
+    el('auth-signup-btn').addEventListener('click', async () => {
+      if (authMode === 'login') {
+        // Switch to sign-up mode
+        authMode = 'signup';
+        el('auth-title').textContent = 'CREATE ACCOUNT';
+        el('auth-name').classList.remove('hidden');
+        el('auth-name').focus();
+        el('auth-login-btn').style.display = 'none';
+        el('auth-signup-btn').textContent = 'Create Account →';
+        el('auth-back-btn').style.display = '';
+        el('auth-error').style.display = 'none';
+        return;
+      }
+      const name  = el('auth-name').value.trim();
+      const email = el('auth-email').value.trim();
+      const pass  = el('auth-password').value;
+      el('auth-error').style.display = 'none';
+      if (!name) {
+        el('auth-error').textContent = 'Please enter your name.';
+        el('auth-error').style.display = 'block';
+        el('auth-name').focus();
+        return;
+      }
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        await setDoc(doc(db, 'users', cred.user.uid), { name, email, balance: 1000, totalBets: 0, totalWon: 0 });
+      } catch (e) {
+        el('auth-error').textContent = authErrMsg(e);
+        el('auth-error').style.display = 'block';
+      }
+    });
+
+    el('auth-back-btn').addEventListener('click', () => {
+      authMode = 'login';
+      el('auth-title').textContent = 'SIGN IN';
+      el('auth-name').classList.add('hidden');
+      el('auth-name').value = '';
+      el('auth-login-btn').style.display = '';
+      el('auth-signup-btn').textContent = 'Create Account';
+      el('auth-back-btn').style.display = 'none';
+      el('auth-error').style.display = 'none';
+    });
+
+    el('signout-btn').addEventListener('click', async () => {
+      await fbSignOut(auth);
+    });
+
   } catch (err) {
     console.warn('Firebase unavailable, running locally:', err);
     el('live-dot').classList.add('local');
     el('live-label').textContent = 'Local';
     el('local-notice').classList.remove('hidden');
+    // Show app even without auth in local mode
+    el('auth-screen').classList.add('hidden');
   }
 } else {
   el('live-dot').classList.add('local');
   el('live-label').textContent = 'Local';
   el('local-notice').classList.remove('hidden');
+  // No Firebase — skip auth
+  el('auth-screen').classList.add('hidden');
 }
 
 // ── State ─────────────────────────────────────
@@ -1298,6 +1828,7 @@ const PLAYER_IMAGES = {
   syl:   'TableTennisicons/Syl.png',
   jakob: 'TableTennisicons/Jakob.png',
   julz:  'TableTennisicons/Julz.png',
+  dan:   'TableTennisicons/DAN.png',
 };
 const AVATAR_COLORS = {
   1: { bg: 'rgba(67,97,238,0.2)',  border: '#4361ee', color: '#4361ee' },
@@ -1322,38 +1853,58 @@ function normalizeName(n) {
   return NAME_MAP[n.toLowerCase()] ?? n;
 }
 
-// ── Elo Logic ─────────────────────────────────
+const ELO_EXCLUDED = new Set(['dan']);
+
+// ── Skill Rating (Bradley-Terry model) ────────
+// Path-independent: based purely on H2H win ratios across all games.
+// Beating a better player counts for more; order of matches doesn't matter.
 function buildElo(history) {
-  const ratings = {}, totalMargin = {}, gameCounts = {};
+  const gameCounts = {}, h2hWins = {}, h2hGames = {};
+  const players = new Set();
+
   for (const g of history) {
-    const { score1, score2, winner } = g;
     const p1 = normalizeName(g.player1), p2 = normalizeName(g.player2);
-    if (!p1 || !p2) continue;
-    [p1, p2].forEach(n => { if (!ratings[n]) { ratings[n] = 1000; totalMargin[n] = 0; gameCounts[n] = 0; } });
-    const wName = winner === 1 ? p1 : p2;
-    const lName = winner === 1 ? p2 : p1;
-    const hi = Math.max(score1 || 0, score2 || 0);
-    const lo = Math.min(score1 || 0, score2 || 0);
-    const margin = hi - lo;
-    const eW = 1 / (1 + Math.pow(10, (ratings[lName] - ratings[wName]) / 400));
-    const K  = 32 * (1 + (hi > 0 ? margin / hi : 0) * 0.75);
-    const delta = K * (1 - eW);
-    ratings[wName] += delta;
-    ratings[lName] -= delta;
-    totalMargin[wName] += margin;
-    totalMargin[lName] -= margin;
-    gameCounts[p1]++;
-    gameCounts[p2]++;
+    if (!p1 || !p2 || !g.winner) continue;
+    if (ELO_EXCLUDED.has(p1.toLowerCase()) || ELO_EXCLUDED.has(p2.toLowerCase())) continue;
+    players.add(p1); players.add(p2);
+    gameCounts[p1] = (gameCounts[p1] || 0) + 1;
+    gameCounts[p2] = (gameCounts[p2] || 0) + 1;
+    if (!h2hWins[p1])  h2hWins[p1]  = {};
+    if (!h2hWins[p2])  h2hWins[p2]  = {};
+    if (!h2hGames[p1]) h2hGames[p1] = {};
+    if (!h2hGames[p2]) h2hGames[p2] = {};
+    h2hGames[p1][p2] = (h2hGames[p1][p2] || 0) + 1;
+    h2hGames[p2][p1] = (h2hGames[p2][p1] || 0) + 1;
+    const wName = g.winner === 1 ? p1 : p2;
+    const lName = g.winner === 1 ? p2 : p1;
+    h2hWins[wName][lName] = (h2hWins[wName][lName] || 0) + 1;
   }
-  return Object.keys(ratings).map(name => {
-    const games = gameCounts[name] || 0;
-    const avgM  = games ? totalMargin[name] / games : 0;
-    return {
-      name,
-      elo:    Math.round(ratings[name]),
-      change: Math.round(ratings[name] - 1000),
-      played: games,
-    };
+
+  // Iterative Bradley-Terry: converges to MLE strength ratings
+  const r = {};
+  players.forEach(p => r[p] = 1.0);
+  for (let iter = 0; iter < 200; iter++) {
+    const newR = {};
+    for (const p of players) {
+      const totalWins = Object.values(h2hWins[p] || {}).reduce((s, v) => s + v, 0);
+      let denom = 0;
+      for (const opp of players) {
+        if (opp === p) continue;
+        const n = (h2hGames[p] || {})[opp] || 0;
+        if (!n) continue;
+        denom += n / (r[p] + r[opp]);
+      }
+      newR[p] = denom > 0 ? totalWins / denom : r[p];
+    }
+    // Normalise: geometric mean = 1
+    const logMean = [...players].reduce((s, p) => s + Math.log(newR[p] || 1), 0) / players.size;
+    players.forEach(p => r[p] = (newR[p] || r[p]) / Math.exp(logMean));
+  }
+
+  // Convert to Elo-like scale centred at 1000
+  return [...players].map(name => {
+    const elo = Math.round(400 * Math.log10(r[name]) + 1000);
+    return { name, elo, change: elo - 1000, played: gameCounts[name] || 0 };
   }).sort((a, b) => b.elo - a.elo);
 }
 
@@ -1381,17 +1932,40 @@ function buildLeaderboard(history) {
     .sort((a, b) => b.wins - a.wins || b.winRate - a.winRate);
 }
 
+// ── Streak Logic ──────────────────────────────
+function buildStreaks(history) {
+  const sorted = [...history].sort((a, b) =>
+    !a.endedAt ? -1 : !b.endedAt ? 1 : new Date(a.endedAt) - new Date(b.endedAt)
+  );
+  const current = {}, best = {};
+  for (const g of sorted) {
+    const p1 = normalizeName(g.player1), p2 = normalizeName(g.player2);
+    if (!p1 || !p2 || !g.winner) continue;
+    const wName = g.winner === 1 ? p1 : p2;
+    const lName = g.winner === 1 ? p2 : p1;
+    current[wName] = (current[wName] || 0) + 1;
+    best[wName] = Math.max(best[wName] || 0, current[wName]);
+    current[lName] = 0;
+    if (!best[lName]) best[lName] = 0;
+  }
+  return { current, best };
+}
+
 // ── Actions ───────────────────────────────────
 async function startGame() {
   if (!selServer) return;
   const p1 = el('p1-input').value.trim() || 'Player 1';
   const p2 = el('p2-input').value.trim() || 'Player 2';
+  placedBetGameId = null;
+  clearBetSlip();
+  const gameId = 'game_' + Date.now();
   await saveState({
     status: 'playing', player1: p1, player2: p2,
     firstServer: selServer, points: [], winner: null,
     matchType: matchType,
     history: state?.history || [],
     startedAt: new Date().toISOString(),
+    gameId,
   });
   selServer = null;
 }
@@ -1408,6 +1982,10 @@ async function addPoint(player) {
         score1: s1, score2: s2, winner: w,
         endedAt: new Date().toISOString(),
       };
+      // Settle any bets on this game
+      if (state.gameId && window._settleBets) {
+        window._settleBets(state.gameId, w, state.player1, state.player2);
+      }
       if (state.matchType === 'exhibition') {
         await Promise.all([
           saveState({ ...state, points: pts, status: 'finished', winner: w }),
@@ -1474,10 +2052,28 @@ function renderGame(st) {
     el('winner-name-display').textContent = st.winner === 1 ? st.player1 : st.player2;
     el('winner-score-display').innerHTML  = `${ws} <span class="dim">–</span> ${ls}`;
     el('winner-overlay').classList.remove('hidden');
+    // Update bet slip pill and winner card result
+    if (activeBetSlip) {
+      const winnerName = st.winner === 1 ? st.player1 : st.player2;
+      const won = activeBetSlip.player === winnerName;
+      showBetSlip(activeBetSlip.player, activeBetSlip.amount, activeBetSlip.payout, won ? 'won' : 'lost');
+      const resultEl = el('winner-bet-result');
+      resultEl.classList.remove('hidden', 'won', 'lost');
+      if (won) {
+        resultEl.classList.add('won');
+        resultEl.textContent = `🎉 You won $${activeBetSlip.payout.toFixed(2)}!`;
+      } else {
+        resultEl.classList.add('lost');
+        resultEl.textContent = `😬 You lost $${activeBetSlip.amount} on ${activeBetSlip.player}`;
+      }
+    } else {
+      el('winner-bet-result').classList.add('hidden');
+    }
   } else {
     el('winner-overlay').classList.add('hidden');
   }
   renderGameOdds(st);
+  updateBetButtonVisibility();
 }
 
 function setScore(id, val) {
@@ -1561,6 +2157,33 @@ function calcOdds(p, fmt) {
     if (err < bestErr) { bestErr = err; best = `${n}/${d}`; }
   }
   return best || `${Math.round(ratio * 10)}/10`;
+}
+
+function getGameP1Prob() {
+  // Returns p1 win probability based on current state
+  if (!state || !state.player1) return 0.5;
+  const history = state.history || [];
+  const p1name = state.player1, p2name = state.player2;
+  function pStats(name) {
+    let w = 0, l = 0, ww = 0, tw = 0;
+    for (const g of history) {
+      const hi = Math.max(g.score1||0, g.score2||0), lo = Math.min(g.score1||0, g.score2||0);
+      const wt = 0.5 + 0.5 * (hi > 0 ? (hi-lo)/hi : 0);
+      const gp1 = normalizeName(g.player1), gp2 = normalizeName(g.player2);
+      if (gp1 === name || gp2 === name) {
+        const won = gp1 === name ? g.winner === 1 : g.winner === 2;
+        won ? w++ : l++;
+        if (won) ww += wt;
+        tw += wt;
+      }
+    }
+    const raw = (w+l) ? w/(w+l) : 0.5;
+    const wp  = tw ? ww/tw : 0.5;
+    return { prob: (w+l) ? 0.5*raw + 0.5*wp : 0.5 };
+  }
+  const s1 = pStats(p1name), s2 = pStats(p2name);
+  const sum = s1.prob + s2.prob;
+  return sum > 0 ? s1.prob/sum : 0.5;
 }
 
 function renderGameOdds(st) {
@@ -1729,6 +2352,20 @@ function renderHistory(history) {
 // ── Render: Leaderboard ───────────────────────
 function renderLeaderboard(history) {
   const hdr = el('standings-header');
+  const streaks = buildStreaks(history || []);
+
+  // Streak banner — show if anyone is on 3+
+  const bannerEl = el('streak-banner');
+  const hotPlayers = Object.entries(streaks.current)
+    .filter(([,n]) => n >= 3)
+    .sort((a,b) => b[1] - a[1]);
+  if (hotPlayers.length) {
+    const [name, count] = hotPlayers[0];
+    bannerEl.textContent = `🔥 ${name} is on a ${count}-game winning streak`;
+    bannerEl.classList.remove('hidden');
+  } else {
+    bannerEl.classList.add('hidden');
+  }
 
   if (lbView === 'elo') {
     // ── Elo view ──
@@ -1777,16 +2414,29 @@ function renderLeaderboard(history) {
           <div class="h2h-exp-rec ${cls}">${r.w}–${r.l}</div>
         </div>`;
       }).join('');
+      const curStreak = streaks.current[p.name] || 0;
+      const bestRun   = streaks.best[p.name] || 0;
+      const streakText = curStreak >= 2 ? `🔥 ${curStreak} streak` : '';
+      const tapText    = hasH2H ? 'tap for H2H ▾' : '';
+      const subLine    = streakText && tapText
+        ? `<div class="splayer-sub"><span class="streak-inline">${streakText}</span> · ${tapText}</div>`
+        : streakText
+          ? `<div class="splayer-sub"><span class="streak-inline">${streakText}</span></div>`
+          : tapText
+            ? `<div class="splayer-sub">${tapText}</div>`
+            : '';
+      const bestHtml   = bestRun > 0 ? `<div class="h2h-best-run">Best run: <span>${bestRun} games</span></div>` : '';
       const detailSection = hasH2H
         ? `<div class="srow-detail hidden" id="h2h-detail-${i}">
              <div class="h2h-detail-title">Head to Head</div>
              ${detailRows}
+             ${bestHtml}
            </div>`
         : '';
       return `<div>
         <div class="srow ${i<3?'top'+(i+1):''}" data-h2h="${i}">
           <div class="srank ${rankClass[i]??''}">${i<3 ? rankLabel[i] : i+1}</div>
-          <div class="splayer">${playerAvatar(p.name)}<div class="splayer-info"><div class="splayer-name">${esc(p.name)}</div>${hasH2H ? `<div class="splayer-tap">tap for H2H ▾</div>` : ''}</div></div>
+          <div class="splayer">${playerAvatar(p.name)}<div class="splayer-info"><div class="splayer-name">${esc(p.name)}</div>${subLine}</div></div>
           <div class="sstat w">${p.wins}</div>
           <div class="sstat l">${p.losses}</div>
           <div class="spct">
@@ -1802,7 +2452,7 @@ function renderLeaderboard(history) {
 
 // ── Screen Navigation ─────────────────────────
 function showScreen(name) {
-  ['setup','game','history','leaderboard','odds-screen'].forEach(id => {
+  ['setup','game','history','leaderboard','odds-screen','points-screen'].forEach(id => {
     const screen = el(id);
     if (id === name) {
       screen.classList.remove('hidden');
@@ -1823,12 +2473,27 @@ function showScreen(name) {
     if (name === 'setup')        el('tab-play').classList.add('active');
     if (name === 'history')      el('tab-hist').classList.add('active');
     if (name === 'leaderboard')  el('tab-board').classList.add('active');
-    if (name === 'odds-screen')  el('tab-odds-screen').classList.add('active');
+    if (name === 'odds-screen')   { /* odds accessed in-game only */ }
+    if (name === 'points-screen') el('tab-points').classList.add('active');
   }
   // hide back buttons when navigating from tabs (not game)
   el('history-back-btn').classList.toggle('hidden-tab', prevScreen !== 'game');
   el('lb-back-btn').classList.toggle('hidden-tab', prevScreen !== 'game');
 }
+// Keep chip highlights in sync with whatever is actually in the input boxes
+function syncChipHighlights() {
+  const p1val = el('p1-input').value.trim().toLowerCase();
+  const p2val = el('p2-input').value.trim().toLowerCase();
+  document.querySelectorAll('#setup .name-chips[data-which="1"] .name-chip').forEach(c => {
+    c.classList.toggle('active-1', c.dataset.name.toLowerCase() === p1val);
+    c.classList.remove('active-2');
+  });
+  document.querySelectorAll('#setup .name-chips[data-which="2"] .name-chip').forEach(c => {
+    c.classList.toggle('active-2', c.dataset.name.toLowerCase() === p2val);
+    c.classList.remove('active-1');
+  });
+}
+
 function showSetup() {
   showScreen('setup');
   el('winner-overlay').classList.add('hidden');
@@ -1837,6 +2502,7 @@ function showSetup() {
   el('serve-btn-1').classList.remove('selected');
   el('serve-btn-2').classList.remove('selected');
   document.querySelectorAll('.match-type-btn').forEach(b => b.classList.toggle('selected', b.dataset.type === matchType));
+  syncChipHighlights();
   updateServeBtnLabels(); updateStartBtn();
 }
 
@@ -1859,22 +2525,26 @@ function selectServer(p) {
 }
 
 // ── Event Listeners ───────────────────────────
-el('p1-input').addEventListener('input', () => { updateServeBtnLabels(); updateStartBtn(); });
-el('p2-input').addEventListener('input', () => { updateServeBtnLabels(); updateStartBtn(); });
+el('p1-input').addEventListener('input', () => { syncChipHighlights(); updateServeBtnLabels(); updateStartBtn(); });
+el('p2-input').addEventListener('input', () => { syncChipHighlights(); updateServeBtnLabels(); updateStartBtn(); });
 
 // Name chips — event delegation so modal chips work too
 document.addEventListener('click', e => {
   const chip = e.target.closest('.name-chip');
   if (!chip) return;
+  e.preventDefault();
   const chips = chip.closest('.name-chips');
   if (!chips) return;
-  const which = chips.dataset.which;
   const targetId = chips.dataset.target;
-  el(targetId).value = chip.textContent;
-  chips.querySelectorAll('.name-chip').forEach(c => c.classList.remove('active-1','active-2'));
-  chip.classList.add(`active-${which}`);
+  const which = chips.dataset.which;
+  el(targetId).value = chip.dataset.name || chip.textContent.trim();
   if (targetId === 'p1-input' || targetId === 'p2-input') {
+    syncChipHighlights();
     updateServeBtnLabels(); updateStartBtn();
+  } else {
+    // modal chips (result-p1 / result-p2) — handle manually as before
+    chips.querySelectorAll('.name-chip').forEach(c => c.classList.remove('active-1','active-2'));
+    chip.classList.add(`active-${which}`);
   }
 });
 
@@ -1887,8 +2557,12 @@ el('lb-list').addEventListener('click', e => {
   const opening = detail.classList.contains('hidden');
   detail.classList.toggle('hidden');
   row.classList.toggle('expanded', opening);
-  const tapHint = row.querySelector('.splayer-tap');
-  if (tapHint) tapHint.textContent = opening ? 'tap to close ▴' : 'tap for H2H ▾';
+  const subLine = row.querySelector('.splayer-sub');
+  if (subLine) {
+    const streakSpan = subLine.querySelector('.streak-inline');
+    const streakPart = streakSpan ? streakSpan.outerHTML + ' · ' : '';
+    subLine.innerHTML = streakPart + (opening ? 'tap to close ▴' : 'tap for H2H ▾');
+  }
 });
 el('serve-btn-1').addEventListener('click', () => selectServer(1));
 el('serve-btn-2').addEventListener('click', () => selectServer(2));
@@ -1910,7 +2584,78 @@ function openHistory() {
 el('history-btn').addEventListener('click', openHistory);
 el('tab-hist').addEventListener('click', () => { prevScreen = 'setup'; openHistory(); });
 el('tab-board').addEventListener('click', () => { prevScreen = 'setup'; showScreen('leaderboard'); renderLeaderboard(state?.history || []); });
-el('tab-odds-screen').addEventListener('click', () => { prevScreen = 'setup'; showScreen('odds-screen'); renderOddsScreen(); });
+// Odds is accessible in-game only — no bottom tab listener needed
+el('tab-points').addEventListener('click', () => { prevScreen = 'setup'; showScreen('points-screen'); renderPoints(state?.history || []); });
+
+function renderPoints(history) {
+  const list = el('points-list');
+  const stats = {};
+  for (const g of history) {
+    const n1 = normalizeName(g.player1), n2 = normalizeName(g.player2);
+    if (!n1 || !n2 || g.score1 == null || g.score2 == null) continue;
+    if (!stats[n1]) stats[n1] = { won: 0, lost: 0, vs: {} };
+    if (!stats[n2]) stats[n2] = { won: 0, lost: 0, vs: {} };
+    const s1 = Number(g.score1), s2 = Number(g.score2);
+    stats[n1].won  += s1; stats[n1].lost += s2;
+    stats[n2].won  += s2; stats[n2].lost += s1;
+    if (!stats[n1].vs[n2]) stats[n1].vs[n2] = { won: 0, lost: 0 };
+    if (!stats[n2].vs[n1]) stats[n2].vs[n1] = { won: 0, lost: 0 };
+    stats[n1].vs[n2].won  += s1; stats[n1].vs[n2].lost += s2;
+    stats[n2].vs[n1].won  += s2; stats[n2].vs[n1].lost += s1;
+  }
+  const players = Object.entries(stats).sort((a, b) => (b[1].won - b[1].lost) - (a[1].won - a[1].lost));
+  if (!players.length) {
+    list.innerHTML = '<div class="empty-state">No matches yet.<br>Play some games to see points here! 🏓</div>';
+    return;
+  }
+  list.innerHTML = players.map(([name, s]) => {
+    const diff = s.won - s.lost;
+    const diffCls = diff > 0 ? 'pos' : diff < 0 ? 'neg' : 'zero';
+    const diffTxt = diff > 0 ? `+${diff}` : String(diff);
+    const maxPts = Math.max(s.won, s.lost, 1);
+    const wonPct  = Math.round(s.won  / maxPts * 100);
+    const lostPct = Math.round(s.lost / maxPts * 100);
+
+    const oppEntries = Object.entries(s.vs).sort((a, b) => (b[1].won - b[1].lost) - (a[1].won - a[1].lost));
+    const maxOppPts = Math.max(...oppEntries.map(([, v]) => Math.max(v.won, v.lost)), 1);
+    const oppRows = oppEntries.map(([opp, v]) => {
+      const oPct = Math.round(v.won  / maxOppPts * 100);
+      const lPct = Math.round(v.lost / maxOppPts * 100);
+      return `<div class="pts-opp-row">
+        <div class="pts-opp-name">${esc(opp)}</div>
+        <div class="pts-opp-bars">
+          <div class="pts-opp-bar-row">
+            <div class="pts-opp-track"><div class="pts-opp-fill won" style="width:${oPct}%"></div></div>
+            <div class="pts-opp-val won">${v.won}</div>
+          </div>
+          <div class="pts-opp-bar-row">
+            <div class="pts-opp-track"><div class="pts-opp-fill lost" style="width:${lPct}%"></div></div>
+            <div class="pts-opp-val lost">${v.lost}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="pts-card">
+      <div class="pts-card-header">
+        ${playerAvatar(name)}
+        <div class="pts-card-name">${esc(name)}</div>
+        <div class="pts-card-diff ${diffCls}">${diffTxt}</div>
+      </div>
+      <div class="pts-bar-row">
+        <div class="pts-bar-label">Won</div>
+        <div class="pts-bar-track"><div class="pts-bar-fill won" style="width:${wonPct}%"></div></div>
+        <div class="pts-bar-val won">${s.won}</div>
+      </div>
+      <div class="pts-bar-row">
+        <div class="pts-bar-label">Lost</div>
+        <div class="pts-bar-track"><div class="pts-bar-fill lost" style="width:${lostPct}%"></div></div>
+        <div class="pts-bar-val lost">${s.lost}</div>
+      </div>
+      ${oppRows ? `<div class="pts-divider"></div><div class="pts-vs-label">vs each player</div>${oppRows}` : ''}
+    </div>`;
+  }).join('');
+}
 
 function renderOddsScreen() {
   const history = state?.history || [];
@@ -2107,14 +2852,193 @@ el('lb-wl-btn').addEventListener('click', () => {
   lbView = 'wl';
   el('lb-wl-btn').classList.add('active');
   el('lb-elo-btn').classList.remove('active');
+  el('lb-wallet-btn').classList.remove('active');
   el('elo-explainer-panel').classList.add('hidden');
+  el('standings-header').classList.remove('hidden');
   renderLeaderboard(state?.history || []);
 });
 el('lb-elo-btn').addEventListener('click', () => {
   lbView = 'elo';
   el('lb-elo-btn').classList.add('active');
   el('lb-wl-btn').classList.remove('active');
+  el('lb-wallet-btn').classList.remove('active');
+  el('standings-header').classList.remove('hidden');
   renderLeaderboard(state?.history || []);
+});
+el('lb-wallet-btn').addEventListener('click', async () => {
+  lbView = 'wallet';
+  el('lb-wallet-btn').classList.add('active');
+  el('lb-wl-btn').classList.remove('active');
+  el('lb-elo-btn').classList.remove('active');
+  el('elo-explainer-panel').classList.add('hidden');
+  el('standings-header').classList.add('hidden');
+  el('lb-list').innerHTML = '<div class="empty-state">Loading wallets…</div>';
+  if (window._loadWallets) {
+    const users = await window._loadWallets();
+    if (!users.length) {
+      el('lb-list').innerHTML = '<div class="empty-state">No wallet data yet.</div>';
+      return;
+    }
+    users.sort((a, b) => (b.balance ?? 1000) - (a.balance ?? 1000));
+    const rankLabel = ['🥇','🥈','🥉'];
+    el('lb-list').innerHTML = users.map((u, i) => {
+      const bal = u.balance ?? 1000;
+      const pl = bal - 1000;
+      const plCls = pl > 0 ? 'pos' : pl < 0 ? 'neg' : 'zero';
+      const plTxt = pl > 0 ? `+$${pl.toFixed(0)}` : pl < 0 ? `-$${Math.abs(pl).toFixed(0)}` : '$0';
+      return `<div class="wallet-row">
+        <div class="srank ${['gold','silver','bronze'][i]??''}">${i < 3 ? rankLabel[i] : i+1}</div>
+        <div class="splayer">${playerAvatar(u.name)}<div class="splayer-info"><div class="splayer-name">${esc(u.name)}</div></div></div>
+        <div class="wallet-balance">$${Math.round(bal)}</div>
+        <div class="wallet-pl ${plCls}">${plTxt}</div>
+      </div>`;
+    }).join('');
+  } else {
+    el('lb-list').innerHTML = '<div class="empty-state">Wallet data requires Firebase.</div>';
+  }
+});
+
+// ── Bet Modal ─────────────────────────────────
+let betSelectedPlayer = null;
+
+function openBetModal() {
+  if (!state || !currentUser) return;
+  betSelectedPlayer = null;
+  el('bet-error').classList.add('hidden');
+  el('bet-confirm-btn').disabled = true;
+  el('bet-confirm-btn').textContent = 'Select a player to bet';
+
+  const maxBet = Math.min(50, currentUser.balance);
+  const amtInput = el('bet-amount');
+  amtInput.max = maxBet;
+  // Clamp preset buttons to maxBet
+  document.querySelectorAll('.bet-preset-btn').forEach(btn => {
+    const v = parseInt(btn.dataset.val);
+    btn.disabled = v > maxBet;
+    btn.style.opacity = v > maxBet ? '0.35' : '';
+  });
+  // Default to $10 or maxBet if lower
+  const defaultAmt = Math.min(10, maxBet);
+  amtInput.value = defaultAmt;
+  syncBetPresets(defaultAmt);
+
+  // Check if already bet this game
+  if (placedBetGameId && placedBetGameId === state.gameId) {
+    el('bet-placed-info').textContent = '✓ You have already placed a bet on this game.';
+    el('bet-placed-info').classList.remove('hidden');
+    el('bet-form-body').style.display = 'none';
+  } else {
+    el('bet-placed-info').classList.add('hidden');
+    el('bet-form-body').style.display = '';
+  }
+
+  const p1p = getGameP1Prob();
+  const p2p = 1 - p1p;
+  el('bet-players').innerHTML = `
+    <button class="bet-player-card" id="bet-p1-card" data-player="1">
+      <div class="bet-player-name">${esc(state.player1)}</div>
+      <div class="bet-player-pct p1">${Math.round(p1p*100)}%</div>
+      <div class="bet-player-odds">${(1/p1p).toFixed(2)}x</div>
+    </button>
+    <button class="bet-player-card" id="bet-p2-card" data-player="2">
+      <div class="bet-player-name">${esc(state.player2)}</div>
+      <div class="bet-player-pct p2">${Math.round(p2p*100)}%</div>
+      <div class="bet-player-odds">${(1/p2p).toFixed(2)}x</div>
+    </button>
+  `;
+
+  el('bet-p1-card').addEventListener('click', () => selectBetPlayer(1, p1p));
+  el('bet-p2-card').addEventListener('click', () => selectBetPlayer(2, p2p));
+
+  el('bet-modal').classList.remove('hidden');
+  updateBetPayout();
+}
+
+function selectBetPlayer(playerNum, prob) {
+  betSelectedPlayer = playerNum === 1 ? state.player1 : state.player2;
+  el('bet-p1-card').classList.remove('selected-p1');
+  el('bet-p2-card').classList.remove('selected-p2');
+  el(playerNum === 1 ? 'bet-p1-card' : 'bet-p2-card').classList.add(playerNum === 1 ? 'selected-p1' : 'selected-p2');
+  el('bet-confirm-btn').disabled = false;
+  el('bet-confirm-btn').textContent = `Bet on ${betSelectedPlayer}`;
+  updateBetPayout();
+}
+
+function syncBetPresets(val) {
+  document.querySelectorAll('.bet-preset-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.val) === parseInt(val));
+  });
+}
+
+function updateBetPayout() {
+  const amount = parseFloat(el('bet-amount').value) || 0;
+  if (!betSelectedPlayer || !state) { el('bet-payout').textContent = '$0.00'; return; }
+  const p1p = getGameP1Prob();
+  const prob = betSelectedPlayer === state.player1 ? p1p : (1 - p1p);
+  const odds = 1 / prob;
+  const payout = Math.round(amount * odds * 100) / 100;
+  el('bet-payout').textContent = `$${payout.toFixed(2)}`;
+}
+
+function closeBetModal() {
+  el('bet-modal').classList.add('hidden');
+  betSelectedPlayer = null;
+}
+
+el('bet-btn').addEventListener('click', openBetModal);
+el('bet-close-btn').addEventListener('click', closeBetModal);
+el('bet-cancel-btn').addEventListener('click', closeBetModal);
+el('bet-backdrop').addEventListener('click', closeBetModal);
+el('bet-amount').addEventListener('input', () => {
+  syncBetPresets(parseInt(el('bet-amount').value));
+  updateBetPayout();
+});
+document.querySelectorAll('.bet-preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    el('bet-amount').value = btn.dataset.val;
+    syncBetPresets(btn.dataset.val);
+    updateBetPayout();
+  });
+});
+
+el('bet-confirm-btn').addEventListener('click', async () => {
+  if (!betSelectedPlayer || !currentUser || !state) return;
+  const amount = parseInt(el('bet-amount').value) || 0;
+  const errEl = el('bet-error');
+  errEl.classList.add('hidden');
+
+  if (amount < 1) { errEl.textContent = 'Minimum bet is $1'; errEl.classList.remove('hidden'); return; }
+  if (amount > 50) { errEl.textContent = 'Maximum bet is $50'; errEl.classList.remove('hidden'); return; }
+  if (amount > currentUser.balance) { errEl.textContent = `Insufficient balance ($${currentUser.balance})`; errEl.classList.remove('hidden'); return; }
+
+  el('bet-confirm-btn').disabled = true;
+  el('bet-confirm-btn').textContent = 'Placing bet…';
+
+  if (window._placeBet) {
+    try {
+      const result = await window._placeBet(betSelectedPlayer, amount);
+      const payout = Math.round(amount * result.odds * 100) / 100;
+      activeBetSlip = { player: result.pickedPlayer, amount, payout };
+      showBetSlip(result.pickedPlayer, amount, payout);
+      closeBetModal();
+    } catch (e) {
+      errEl.textContent = 'Failed to place bet. Try again.';
+      errEl.classList.remove('hidden');
+      el('bet-confirm-btn').disabled = false;
+      el('bet-confirm-btn').textContent = `Bet on ${betSelectedPlayer}`;
+    }
+  } else {
+    // Local mode — just simulate
+    const p1p = getGameP1Prob();
+    const prob = betSelectedPlayer === state.player1 ? p1p : (1 - p1p);
+    const payout = Math.round(amount * (1 / prob) * 100) / 100;
+    currentUser.balance -= amount;
+    placedBetGameId = state.gameId;
+    activeBetSlip = { player: betSelectedPlayer, amount, payout };
+    showBetSlip(betSelectedPlayer, amount, payout);
+    updateBalanceDisplay();
+    closeBetModal();
+  }
 });
 
 // ── Log Result Modal ──────────────────────────
@@ -2127,6 +3051,7 @@ function openAddResult() {
 function closeAddResult() { el('add-result-modal').classList.add('hidden'); }
 
 el('add-result-btn').addEventListener('click', openAddResult);
+el('setup-log-btn').addEventListener('click', openAddResult);
 el('game-log-btn').addEventListener('click', openAddResult);
 el('modal-backdrop').addEventListener('click', closeAddResult);
 el('result-cancel').addEventListener('click', closeAddResult);
